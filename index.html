@@ -102,25 +102,23 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 </div>
 <div style="font-size:11px;font-weight:700;color:var(--muted);margin:12px 0 8px;text-transform:uppercase">📉 技术面</div>
 <div class="entry-grid">
-<div class="entry-field"><label>VIX 恐慌指数</label><input type="number" id="e_vix" placeholder="e.g. 18.5" step="0.1"></div>
-<div class="entry-field"><label>SMA60</label><input type="number" id="e_sma60" placeholder="e.g. 2.080" step="0.001"></div>
-<div class="entry-field"><label>SMA120</label><input type="number" id="e_sma120" placeholder="e.g. 2.020" step="0.001"></div>
-<div class="entry-field"><label>SMA250</label><input type="number" id="e_sma250" placeholder="e.g. 1.950" step="0.001"></div>
-<div class="entry-field"><label>Fib 波段高点</label><input type="number" id="e_fib_high" placeholder="e.g. 2.500" step="0.001"></div>
-<div class="entry-field"><label>Fib 波段低点</label><input type="number" id="e_fib_low" placeholder="e.g. 1.800" step="0.001"></div>
+<div class="entry-field"><label>SMA60</label><input type="number" id="e_sma60" placeholder="e.g. 1.420" step="0.001"></div>
+<div class="entry-field"><label>SMA120</label><input type="number" id="e_sma120" placeholder="e.g. 1.418" step="0.001"></div>
+<div class="entry-field"><label>SMA250</label><input type="number" id="e_sma250" placeholder="e.g. 1.393" step="0.001"></div>
+<div class="entry-field"><label>RSI 14日</label><input type="number" id="e_rsi" placeholder="e.g. 38.5" step="0.1"></div>
+<div class="entry-field"><label>量比（今日/5日均量）</label><input type="number" id="e_vol_ratio" placeholder="e.g. 0.8" step="0.01"></div>
+<div class="entry-field"><label>成交量状态</label><select id="e_vol_state" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="shrink">缩量回调≤0.8</option><option value="flat">平量震荡0.9~1.1</option><option value="mild_up">温和放量上涨</option><option value="big_up">大幅放量上涨</option><option value="mild_down">温和放量下跌</option><option value="big_down">大幅放量下跌</option></select></div>
+<div class="entry-field"><label>Fib 波段高点</label><input type="number" id="e_fib_high" placeholder="e.g. 1.501" step="0.001"></div>
+<div class="entry-field"><label>Fib 波段低点</label><input type="number" id="e_fib_low" placeholder="e.g. 1.241" step="0.001"></div>
+<div class="entry-field"><label>斐波那契所处区域</label><select id="e_fib_zone" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="above_0382">高于0.382（回调不充分）</option><option value="near_05">0.5附近（0.382~0.618）</option><option value="golden">0.618~0.786 黄金区</option><option value="deep">0.786~1.000 深度区★</option></select></div>
 <div class="entry-field"><label>Andean 绿线 bull 值</label><input type="number" id="e_bull" placeholder="e.g. 0.0000" step="0.0001"></div>
 <div class="entry-field"><label>Andean 红线 bear 值</label><input type="number" id="e_bear" placeholder="e.g. 0.0217" step="0.0001"></div>
-</div>
-<div class="entry-grid" style="margin-top:4px">
-<div class="entry-field"><label>斐波那契所处区域</label><select id="e_fib_zone" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="above_0382">高于0.382（回调不充分）</option><option value="near_05">0.5附近（0.382~0.618）</option><option value="golden">0.618~0.786 黄金区</option><option value="deep">0.786~1.000 深度区★</option></select></div>
+<div class="entry-field"><label>Andean 趋势状态</label><select id="e_andean_trend" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="bull_cross">绿线刚上穿红线</option><option value="bull_above">绿&gt;红（多头主导）</option><option value="bull_lt_bear">绿&gt;0且&lt;红（多头弱）</option><option value="bull_zero">绿线=0（多头消失）</option><option value="bear_zero">红线=0（空头消失）</option></select></div>
 <div class="entry-field"><label>脉冲MACD 颜色</label><select id="e_macd_color" onchange="this.classList.add('sel');togglePrev()"><option value="">请选择</option><option value="lime">🟢 亮绿 Lime（极强）</option><option value="green">🌲 深绿 Green（偏多）</option><option value="orange">🟠 橙色 Orange（偏空）</option><option value="red">🔴 红色 Red（极弱）</option><option value="none">⬜ 无色（震荡）</option></select></div>
 <div class="entry-field"><label>脉冲MACD 零轴位置</label><select id="e_macd_pos" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="above_near">主柱&gt;0 靠近零轴</option><option value="above_far">主柱&gt;0 远离零轴</option><option value="below_near">主柱&lt;0 靠近零轴</option><option value="below_far">主柱&lt;0 远离零轴</option></select></div>
 <div class="entry-field" id="prev-wrap" style="display:none"><label>上一根MACD颜色（无色时）</label><select id="e_macd_prev" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="lime">🟢 Lime</option><option value="green">🌲 Green</option><option value="orange">🟠 Orange</option><option value="red">🔴 Red</option></select></div>
-<div class="entry-field"><label>Andean 趋势状态</label><select id="e_andean_trend" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="bull_cross">绿线刚上穿红线</option><option value="bull_above">绿&gt;红（多头主导）</option><option value="bull_lt_bear">绿&gt;0且&lt;红（多头弱）</option><option value="bull_zero">绿线=0（多头消失）</option><option value="bear_zero">红线=0（空头消失）</option></select></div>
 <div class="entry-field"><label>挤压动量 柱状颜色</label><select id="e_sqz_color" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="lime">🟢 亮绿（上涨加速）</option><option value="green">🌲 深绿（上涨减速）</option><option value="maroon">🟤 深红（下跌减速）</option><option value="red">🔴 鲜红（下跌加速）</option></select></div>
 <div class="entry-field"><label>挤压动量 中轴点颜色</label><select id="e_sqz_dot" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="black">⚫ 黑色（蓄力）</option><option value="gray">⬜ 灰色（释放）</option><option value="blue">🔵 蓝色（无挤压）</option></select></div>
-<div class="entry-field"><label>NQ期货升贴水状态</label><select id="e_nq_contango" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="backwardation">期货贴水&gt;-0.5%（悲观）</option><option value="mild_back">期货轻微贴水0~-0.5%</option><option value="normal_contango">期货正常升水0~+0.3%</option><option value="over_contango">期货过度升水&gt;+0.5%</option></select></div>
-<div class="entry-field"><label>NQ夜盘涨跌幅</label><select id="e_nq_overnight" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="crash">大跌&lt;-2%+VIX飙升</option><option value="small_drop">小跌或平稳</option><option value="big_rally">大涨&gt;+2%+溢价偏高</option></select></div>
 </div>
 <div class="btn-row">
 <button class="btn-fill" onclick="autoFill()">⚡ 自动填入今日数据</button>
@@ -159,10 +157,10 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 
 <!-- KPI -->
 <div class="kpi-grid">
-<div class="kpi-card" style="border-left-color:var(--blue)"><div class="kpi-label">当前价格</div><div class="kpi-value red" id="kpi-price">--</div><div class="kpi-sub">今日收盘价（元）</div></div>
-<div class="kpi-card" style="border-left-color:var(--blue)"><div class="kpi-label">溢价/折价率</div><div class="kpi-value amber" id="kpi-premium">--</div><div class="kpi-sub" id="kpi-premium-sub">IOPV偏离度</div></div>
-<div class="kpi-card" style="border-left-color:var(--blue)"><div class="kpi-label">US10Y 美债</div><div class="kpi-value blue" id="kpi-us10y">--</div><div class="kpi-sub">10年期国债收益率</div></div>
-<div class="kpi-card" style="border-left-color:var(--blue)"><div class="kpi-label">ERP 风险溢价</div><div class="kpi-value amber" id="kpi-erp">--</div><div class="kpi-sub">1÷ForwardPE - US10Y</div></div>
+<div class="kpi-card"><div class="kpi-label">当前价格</div><div class="kpi-value" id="kpi-price" style="color:#dc2626">--</div><div class="kpi-sub" id="kpi-price-sub">今日收盘价（元）</div></div>
+<div class="kpi-card"><div class="kpi-label">溢价率</div><div class="kpi-value" id="kpi-premium" style="color:#d97706">--</div><div class="kpi-sub" id="kpi-premium-sub">ETF折溢价</div></div>
+<div class="kpi-card"><div class="kpi-label">US10Y</div><div class="kpi-value" id="kpi-us10y" style="color:#2563eb">--</div><div class="kpi-sub">美10年期国债</div></div>
+<div class="kpi-card"><div class="kpi-label">ERP</div><div class="kpi-value" id="kpi-erp" style="color:#059669">--</div><div class="kpi-sub">股票风险溢价</div></div>
 </div>
 
 <!-- Score Decomp -->
@@ -219,16 +217,31 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <p style="font-size:12px;color:var(--muted)">请先计算评分</p>
 </div>
 
-<!-- 数据来源 -->
-<div style="text-align:center;font-size:10px;color:#b0b7c3;margin-top:8px;margin-bottom:4px;padding:8px 16px">
-数据来源：TradingView · MacroMicro · 雪球基金<br>仅供研究参考，不构成投资建议
+
+
+<!-- 评分信号参考 -->
+<div class="card">
+<div class="card-title">⑨ 评分信号参考</div>
+<table style="width:100%;border-collapse:collapse;font-size:12px">
+<thead><tr style="border-bottom:1.5px solid #e5e7eb">
+<th style="padding:6px 8px;text-align:left;font-size:10px;color:var(--muted)">分数区间</th>
+<th style="padding:6px 8px;text-align:left;font-size:10px;color:var(--muted)">信号</th>
+<th style="padding:6px 8px;text-align:left;font-size:10px;color:var(--muted)">操作参考</th>
+</tr></thead>
+<tbody>
+<tr style="border-bottom:.5px solid #f3f4f6"><td style="padding:6px 8px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#059669;display:inline-block"></span>85~100</span></td><td style="padding:6px 8px;font-weight:700;color:#059669">强烈买入</td><td style="padding:6px 8px;color:#6b7280;font-size:11px">估值与技术共振，加速上涨，加大布局</td></tr>
+<tr style="border-bottom:.5px solid #f3f4f6"><td style="padding:6px 8px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#34d399;display:inline-block"></span>70~84</span></td><td style="padding:6px 8px;font-weight:700;color:#059669">强买入</td><td style="padding:6px 8px;color:#6b7280;font-size:11px">估值技术双优，积极布局分批入场</td></tr>
+<tr style="border-bottom:.5px solid #f3f4f6"><td style="padding:6px 8px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#d97706;display:inline-block"></span>60~69</span></td><td style="padding:6px 8px;font-weight:700;color:#d97706">中性偏多</td><td style="padding:6px 8px;color:#6b7280;font-size:11px">轻仓试探，等待技术确认后加仓</td></tr>
+<tr style="border-bottom:.5px solid #f3f4f6"><td style="padding:6px 8px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block"></span>45~59</span></td><td style="padding:6px 8px;font-weight:700;color:#d97706">中性观望</td><td style="padding:6px 8px;color:#6b7280;font-size:11px">持仓不动，耐心等待更好入场时机</td></tr>
+<tr style="border-bottom:.5px solid #f3f4f6"><td style="padding:6px 8px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#f87171;display:inline-block"></span>30~44</span></td><td style="padding:6px 8px;font-weight:700;color:#dc2626">中性偏空</td><td style="padding:6px 8px;color:#6b7280;font-size:11px">高估或技术偏弱，谨慎操作勿追高</td></tr>
+<tr><td style="padding:6px 8px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#dc2626;display:inline-block"></span>&lt;30</span></td><td style="padding:6px 8px;font-weight:700;color:#dc2626">高估警示</td><td style="padding:6px 8px;color:#6b7280;font-size:11px">满仓回避，静待估值与技术双双回落</td></tr>
+</tbody></table>
 </div>
 
 <!-- History -->
 <div class="card" id="history-section">
 <div class="card-title">⑧ 历史评分记录</div>
 <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-<button class="hist-btn" onclick="shareRecords()" style="background:#2563eb;color:#fff">🔗 生成分享链接</button>
 <button class="hist-btn" onclick="exportCSV()" style="background:#7c3aed;color:#fff">📥 导出CSV</button>
 <button class="hist-btn" onclick="clearHistory()" style="background:#f3f4f6;color:var(--muted);border:1px solid #e5e7eb">🗑️ 清除记录</button>
 </div>
@@ -243,7 +256,7 @@ async function cloudLoad(){try{var r=await fetch(API_BASE+'/'+API_KEY);if(r.ok){
 async function cloudSave(records){try{await fetch(API_BASE+'/'+API_KEY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(records)});}catch(e){console.warn('云端保存失败',e);}}
 function g(id){return document.getElementById(id);}
 function gv(id){var el=g(id);return el?el.value:'';}
-(function(){importSharedRecords();
+(function(){
 var d=new Date();
 g('header-date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 renderScoreDecomp();
@@ -257,24 +270,34 @@ if(!isNaN(fpe)&&fpe>0&&!isNaN(us)){g('e_erp').value=((1/fpe*100)-us).toFixed(3);
 g('e_forward_pe').addEventListener('input',updateERP);
 g('e_us10y').addEventListener('input',updateERP);
 function renderScoreDecomp(){
-var sc=g('score-decomp-section');if(!sc)return;
+var sc2=g('score-decomp-section');if(!sc2)return;
 function sr(id,label,max){
-return '<div class="score-row"><div class="score-row-label">'+label+'</div>'
-+'<div class="score-bar-wrap"><div id="bar-'+id+'" class="score-bar-fill" style="width:0%;background:#059669"></div></div>'
-+'<div id="pts-'+id+'" class="score-row-pts" style="color:#059669">-- / '+max+'</div></div>';}
-sc.innerHTML='<div class="card-title">① 量化得分分解（总分100）</div>'
-+'<div class="dim-label">估值维度（60分）</div>'
-+sr('pe','PE百分位TTM',20)+sr('fpe','Forward PE',10)+sr('us10y','US10Y美债',12)+sr('erp','ERP风险溢价',10)+sr('premium','溢价/折价率',8)
-+'<div class="subtotal-row"><span>估值维度小计</span><span id="subtotal-val" style="color:#d97706">-- / 60</span></div>'
-+'<div class="dim-label">技术面维度（40分）</div>'
-+sr('ma','价格与均线',10)+sr('fib','斐波那契',6)+sr('macd','脉冲MACD',7)+sr('andean','动能强弱',5)+sr('sqz','挤压动量',6)+sr('vix','VIX恐慌指数',3)+sr('nq','NQ期货升贴水',3)
-+'<div class="subtotal-row"><span>技术面维度小计</span><span id="subtotal-tech" style="color:#dc2626">-- / 40</span></div>'
-+'<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0">'
-+'<span style="font-size:12px;font-weight:600;color:var(--muted)">综合得分</span>'
-+'<span id="total-display" style="font-family:monospace;font-size:18px;font-weight:700;color:#d97706">-- / 100</span></div>';}
+  return '<div style="margin-bottom:7px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">'
+    +'<span style="font-size:11px;font-weight:600;color:#374151">'+label+'</span>'
+    +'<span style="display:flex;align-items:center;gap:6px">'
+    +'<span id="desc-'+id+'" style="font-size:10px;color:#9ca3af;max-width:130px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span>'
+    +'<span id="pts-'+id+'" style="font-family:monospace;font-size:11px;font-weight:700;color:#d97706;min-width:42px;text-align:right">--/'+max+'</span>'
+    +'</span></div>'
+    +'<div style="height:5px;background:#f3f4f6;border-radius:3px;overflow:hidden">'
+    +'<div id="bar-'+id+'" style="height:100%;width:0%;background:#d97706;border-radius:3px;transition:width .4s"></div>'
+    +'</div></div>';
+}
+var html='<div class="card-title">① 量化分解（总分/100）</div>';
+html+='<div style="font-size:10px;font-weight:700;color:var(--blue);margin:6px 0 4px;letter-spacing:.5px">▸ 估值面维度</div>';
+html+=sr('pe','PE百分位TTM',20);html+=sr('fpe','Forward PE',10);html+=sr('us10y','US10Y美债',12);html+=sr('erp','ERP风险溢价',10);html+=sr('premium','溢价/折价率',8);
+html+='<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;padding:5px 0;border-top:.5px solid #e5e7eb;margin-top:4px"><span style="color:#6b7280">估值面小计</span><span id="subtotal-val" style="color:#dc2626;font-family:monospace">-- / 60</span></div>';
+html+='<div style="font-size:10px;font-weight:700;color:var(--blue);margin:10px 0 4px;letter-spacing:.5px">▸ 技术面维度</div>';
+html+=sr('ma','价格与均线',10);html+=sr('fib','斐波那契',6);html+=sr('macd','脉冲MACD',7);html+=sr('andean','动能强弱',5);html+=sr('sqz','挤压动量',6);html+=sr('vix','VIX恐慌指数',3);html+=sr('nq','NQ期货升贴水',3);
+html+='<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;padding:5px 0;border-top:.5px solid #e5e7eb;margin-top:4px"><span style="color:#6b7280">技术面小计</span><span id="subtotal-tech" style="color:#dc2626;font-family:monospace">-- / 40</span></div>';
+html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:12px;font-weight:600;color:#6b7280">综合得分</span><span id="total-display" style="font-family:monospace;font-size:18px;font-weight:700;color:#d97706">-- / 100</span></div>';
+sc2.innerHTML=html;
+}
+
 function sb(id,s,max){var el=g('bar-'+id);if(!el)return;el.style.width=Math.min(100,Math.round(s/max*100))+'%';el.style.background=sc(s,max);}
 function sp(id,s,max){var el=g('pts-'+id);if(!el)return;el.textContent=s+' / '+max;el.style.color=sc(s,max);}
 function sc(s,max){return s/max>=.7?'#059669':s/max>=.4?'#d97706':'#dc2626';}
+function sd(id,desc){var el=g('desc-'+id);if(el)el.textContent=desc;}
 function clearAll(){
 ['e_price','e_premium','e_pe_ttm','e_pe_pct','e_forward_pe','e_us10y','e_vix','e_sma60','e_sma120','e_sma250','e_fib_high','e_fib_low','e_bull','e_bear'].forEach(function(id){var el=g(id);if(el)el.value='';});
 ['e_fib_zone','e_macd_color','e_macd_pos','e_macd_prev','e_andean_trend','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight'].forEach(function(id){var el=g(id);if(el){el.value='';el.classList.remove('sel');}});
@@ -305,17 +328,17 @@ if(!isNaN(fpe)&&!isNaN(us10y))g('e_erp').value=erp.toFixed(3);
 if(isNaN(pePct)&&isNaN(fpe)&&isNaN(us10y)){showMsg('⚠️ 请至少填写：PE百分位、Forward PE 和 US10Y');return;}
 var total=0,valTotal=0,techTotal=0;
 var peS=isNaN(pePct)?0:(pePct<=20?20:pePct<=35?16:pePct<=50?12:pePct<=65?7:pePct<=80?3:0);
-sb('pe',peS,20);sp('pe',peS,20);valTotal+=peS;
+sb('pe',peS,20);sp('pe',peS,20);sd('pe',isNaN(pePct)?'未填入':pePct<=20?'极低分位 低估':pePct<=40?'低位':pePct<=60?'中性':pePct<=80?'偏高':'历史高位');valTotal+=peS;
 var fpeBase=isNaN(fpe)?0:(fpe<=22?10:fpe<=25?8:fpe<=28?6:fpe<=32?4:fpe<=36?2:0);
 var fpeAdj=0;if(!isNaN(peTtm)&&!isNaN(fpe)&&fpe>0){var diff=(peTtm-fpe)/fpe*100;if(fpe>peTtm)fpeAdj=2;else if(diff<10)fpeAdj=1;else if(diff>35)fpeAdj=-2;}
 var fpeS=Math.max(0,Math.min(10,fpeBase+fpeAdj));
-sb('fpe',fpeS,10);sp('fpe',fpeS,10);valTotal+=fpeS;
+sb('fpe',fpeS,10);sp('fpe',fpeS,10);sd('fpe',isNaN(fpe)?'未填入':fpe<=22?'低估值':fpe<=25?'合理':fpe<=28?'偏高':fpe<=32?'较贵':'泡沫区');valTotal+=fpeS;
 var bondS=isNaN(us10y)?0:(us10y<=3.5?12:us10y<=4.0?9:us10y<=4.5?6:us10y<=5.0?3:0);
-sb('us10y',bondS,12);sp('us10y',bondS,12);valTotal+=bondS;
+sb('us10y',bondS,12);sp('us10y',bondS,12);sd('us10y',isNaN(us10y)?'未填入':us10y<=3.5?'低利率 友好':us10y<=4.0?'适中':us10y<=4.5?'偏高承压':'高利率压估值');valTotal+=bondS;
 var erpS=isNaN(erp)?0:(erp>=3?10:erp>=2?8:erp>=1?6:erp>=0?4:erp>=-1?2:0);
-sb('erp',erpS,10);sp('erp',erpS,10);valTotal+=erpS;
+sb('erp',erpS,10);sp('erp',erpS,10);sd('erp',isNaN(erp)?'未填入':erp>=2?'高风险溢价':erp>=1?'偏高看多':erp>=0?'正值中性':'负值高估');valTotal+=erpS;
 var premS=isNaN(premium)?8:(Math.abs(premium)<=2?8:premium<=5?5:premium<=10?2:0);
-sb('premium',premS,8);sp('premium',premS,8);valTotal+=premS;
+sb('premium',premS,8);sp('premium',premS,8);sd('premium',isNaN(premium)?'未填入':Math.abs(premium)<=0.5?'贴近净值':premium>2?'溢价偏高':premium<-2?'折价明显':'正常范围');valTotal+=premS;
 g('subtotal-val').textContent=valTotal+' / 60';g('subtotal-val').style.color=sc(valTotal,60);
 var maS=5,maDesc='均线数据不足';
 if(!isNaN(price)&&!isNaN(sma250)){var dev=((price-sma250)/sma250*100);
@@ -324,10 +347,10 @@ else if(price>sma250){maS=3;maDesc='高于SMA250 +'+dev.toFixed(1)+'%';}
 else if(!isNaN(sma60)&&price>sma60){maS=6;maDesc='SMA60~SMA250之间';}
 else if(dev>-10){maS=8;maDesc='跌破SMA250后'+dev.toFixed(1)+'% 回踩';}
 else{maS=10;maDesc='大幅跌破SMA250 '+dev.toFixed(1)+'%';}}
-sb('ma',maS,10);sp('ma',maS,10);techTotal+=maS;
+sb('ma',maS,10);sp('ma',maS,10);sd('ma',maDesc);techTotal+=maS;
 var fibMap={above_0382:1,near_05:4,golden:5,deep:6};
 var fibS=fibZone?fibMap[fibZone]||3:3;
-sb('fib',fibS,6);sp('fib',fibS,6);techTotal+=fibS;
+sb('fib',fibS,6);sp('fib',fibS,6);sd('fib',fibZone==='deep'?'深度回调★':fibZone==='golden'?'黄金区0.618':fibZone==='near_05'?'0.5中位区':'回调不充分');techTotal+=fibS;
 // ====== 三指标联动评分（总18分）======
 var macdS=0,macdDesc='未选择';
 if(macdC==='red'){macdS=0;macdDesc='Red极弱→0';}
@@ -362,15 +385,15 @@ else if(partialSync&&rawSum<10){var boost=10-rawSum;var each=Math.round(boost/3)
 else{comboDesc='';}
 if(macdS>7)macdS=7;if(andS>5)andS=5;if(sqzS>6)sqzS=6;
 if(comboDesc)macdDesc+=' '+comboDesc;
-sb('macd',macdS,7);sp('macd',macdS,7);techTotal+=macdS;
-sb('andean',andS,5);sp('andean',andS,5);techTotal+=andS;
-sb('sqz',sqzS,6);sp('sqz',sqzS,6);techTotal+=sqzS;
+sb('macd',macdS,7);sp('macd',macdS,7);sd('macd',macdDesc);techTotal+=macdS;
+sb('andean',andS,5);sp('andean',andS,5);sd('andean',andDesc);techTotal+=andS;
+sb('sqz',sqzS,6);sp('sqz',sqzS,6);sd('sqz',sqzDesc);techTotal+=sqzS;
 var vixS=isNaN(vix)?0:(vix>40?3:vix>=30?2:vix>=20?1:0);
-sb('vix',vixS,3);sp('vix',vixS,3);techTotal+=vixS;
+sb('vix',vixS,3);sp('vix',vixS,3);sd('vix',isNaN(vix)?'未填入':vix>40?'极度恐慌':vix>=30?'高恐慌':vix>=20?'中性偏谨慎':'低恐慌 乐观');techTotal+=vixS;
 var contMap={backwardation:2,mild_back:1.5,normal_contango:1,over_contango:0};
 var nightMap={crash:1,small_drop:0.5,big_rally:0};
 var nqS=Math.min(3,(contMap[nqCont]||1)+(nightMap[nqNight]||0.5));
-sb('nq',nqS,3);sp('nq',nqS,3);techTotal+=nqS;
+sb('nq',nqS,3);sp('nq',nqS,3);sd('nq',nqCont==='backwardation'?'期货贴水看多':nqCont==='mild_back'?'轻微贴水':nqNight==='crash'?'夜盘大跌警示':'正常升水');techTotal+=nqS;
 g('subtotal-tech').textContent=techTotal+' / 40';g('subtotal-tech').style.color=sc(techTotal,40);
 total=valTotal+techTotal;
 g('hero-score').textContent=total;g('hero-score').style.color=sc(total,100);
@@ -383,10 +406,23 @@ var pTxt=total>=70?'#065f46':total>=60?'#92400e':'#991b1b';
 g('header-badge').textContent=level;g('header-badge').style.background=pBg;g('header-badge').style.color=pTxt;
 g('hero-pill').style.background=pBg;g('hero-pill').style.color=pTxt;
 g('hero-pill').innerHTML='<span class="verdict-dot" style="background:'+pDot+'"></span>'+level+' · '+total+'分';
-if(!isNaN(price)){g('kpi-price').textContent=price;}
-if(!isNaN(premium)){var pel=g('kpi-premium');pel.textContent=(premium>0?'+':'')+premium+'%';pel.className='kpi-value '+(Math.abs(premium)<=2?'green':premium>5?'red':'amber');g('kpi-premium-sub').textContent=premium>2?'⚠️溢价偏高':Math.abs(premium)<=2?'正常范围':'折价';}
-if(!isNaN(us10y)){g('kpi-us10y').textContent=us10y+'%';}
-if(!isNaN(erp)){var el=g('kpi-erp');el.textContent=(erp>0?'+':'')+erp.toFixed(2)+'%';el.className='kpi-value '+(erp>=1?'green':erp>=0?'amber':'red');}
+if(!isNaN(price)){g('kpi-price').textContent=price;g('kpi-price').style.cssText='color:#dc2626;font-family:monospace;font-size:22px;font-weight:700';}
+if(!isNaN(premium)){
+  var pel=g('kpi-premium');
+  pel.textContent=(premium>0?'+':'')+premium.toFixed(2)+'%';
+  pel.style.cssText=(Math.abs(premium)<=1?'color:#059669':premium>3?'color:#dc2626':'color:#d97706')+';font-family:monospace;font-size:22px;font-weight:700';
+  g('kpi-premium-sub').textContent=premium>2?'⚠️溢价偏高':Math.abs(premium)<=1?'贴近净值':'折价';
+}
+if(!isNaN(us10y)){
+  var ue=g('kpi-us10y');
+  ue.textContent=us10y.toFixed(2)+'%';
+  ue.style.cssText=(us10y<=3.5?'color:#059669':us10y<=4.0?'color:#2563eb':us10y<=4.5?'color:#d97706':'color:#dc2626')+';font-family:monospace;font-size:22px;font-weight:700';
+}
+if(!isNaN(erp)){
+  var ee=g('kpi-erp');
+  ee.textContent=(erp>0?'+':'')+erp.toFixed(2)+'%';
+  ee.style.cssText=(erp>=2?'color:#059669':erp>=1?'color:#059669':erp>=0?'color:#d97706':'color:#dc2626')+';font-family:monospace;font-size:22px;font-weight:700';
+}
 g('box-us10y').textContent=isNaN(us10y)?'--%':us10y+'%';
 g('box-vix').textContent=isNaN(vix)?'--':vix;
 g('box-erp').textContent=isNaN(erp)?'--%':(erp>0?'+':'')+erp.toFixed(2)+'%';
@@ -441,8 +477,8 @@ var dateVal=g('header-date').value||new Date().toISOString().slice(0,10);
 var te=g('etf-title');var title=te?te.textContent.trim():'纳指ETF · 513100';
 var cm=title.match(/\d{6}/);var code=cm?cm[0]:'515180';
 saveRecord({date:dateVal,code:code,title:title,total:total,valTotal:valTotal,techTotal:techTotal,level:level,
-price:isNaN(price)?null:price,did:isNaN(did)?null:did,cn10y:isNaN(cn10y)?null:cn10y,spread:parseFloat(spread.toFixed(3)),
-_form:(function(){var f={};['e_price','e_did','e_cn10y','e_did_pct','e_pb_pct','e_roe','e_sma60','e_sma120','e_sma250','e_rsi','e_vol_ratio','e_fib_high','e_fib_low','e_bull','e_bear','e_fib_zone','e_macd_color','e_macd_pos','e_macd_prev','e_andean_trend','e_sqz_color','e_sqz_dot','e_vol_state'].forEach(function(id){f[id]=gv(id);});return f;})()});
+price:isNaN(price)?null:price,us10y:isNaN(us10y)?null:us10y,erp:isNaN(erp)?null:parseFloat(erp.toFixed(3)),premium:isNaN(premium)?null:premium,
+_form:(function(){var f={};['e_price','e_premium','e_pe_ttm','e_pe_pct','e_forward_pe','e_us10y','e_vix','e_sma60','e_sma120','e_sma250','e_fib_high','e_fib_low','e_fib_zone','e_bull','e_bear','e_andean_trend','e_macd_color','e_macd_pos','e_macd_prev','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight','e_rsi','e_vol_ratio','e_vol_state'].forEach(function(id){f[id]=gv(id);});return f;})()});
 showMsg('综合得分：<strong>'+total+'/100</strong>（估值'+valTotal+'+技术'+techTotal+'）');}
 function loadHistory(){return[];}// legacy stub
 function saveRecord(rec){
@@ -481,7 +517,7 @@ var te2=g('etf-title');if(te2&&r.title)te2.textContent=r.title;
 var te=g('etf-title');if(te&&r.title)te.textContent=r.title;
 updateERP();togglePrev();calcScore();
 var ec=document.querySelector('.card');if(ec)ec.scrollIntoView({behavior:'smooth',block:'start'});
-showMsg('🔄 已回放 <strong>'+r.date+'</strong>（'+(r.code||'')+'）评分 '+r.total+'/100');}
+showMsg('🔄 已回放 <strong>'+r.date+'</strong>（'+(r.code||'')+'）评分 '+r.total+'/100');});} // end cloudLoad
 function deleteRecord(idx){
 cloudLoad().then(function(records){
 if(idx<0||idx>=records.length)return;
@@ -572,107 +608,7 @@ function showMonthly(){
 }
 
 
-function shareRecords(){
-  cloudLoad().then(function(records){
-  if(!records || records.length === 0){ showMsg('⚠️ 暂无记录可分享'); return; }
-  // Encode records to base64 URL param (strip _form to reduce size)
-  var slim = records.map(function(r){
-    return {date:r.date,code:r.code,title:r.title,total:r.total,
-      valTotal:r.valTotal,techTotal:r.techTotal,level:r.level,
-      price:r.price,did:r.did,cn10y:r.cn10y,spread:r.spread,
-      us10y:r.us10y,erp:r.erp};
-  });
-  var json = JSON.stringify(slim);
-  var b64 = btoa(encodeURIComponent(json));
-  var url = window.location.href.split('?')[0].split('#')[0] + '?share=' + b64;
-  // Copy to clipboard
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(function(){
-      showShareModal(url, true);
-    }).catch(function(){ showShareModal(url, false); });
-  } else {
-    showShareModal(url, false);
-  }
-  });// end cloudLoad
-}
 
-function showShareModal(url, copied){
-  var old = document.getElementById('share-modal');
-  if(old) document.body.removeChild(old);
-  var md = document.createElement('div');
-  md.id = 'share-modal';
-  md.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;';
-  md.innerHTML = '<div style="background:#fff;border-radius:16px;padding:20px;max-width:480px;width:100%;">'
-    + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">'
-    + '<span style="font-size:14px;font-weight:700;color:#111827;">🔗 分享历史记录</span>'
-    + '<button id="share-close" style="background:none;border:none;font-size:20px;cursor:pointer;color:#6b7280;">×</button></div>'
-    + '<p style="font-size:12px;color:#6b7280;margin-bottom:10px;">将以下链接发给对方，对方打开后可查看你的全部评分记录（只读，不影响对方自己的数据）：</p>'
-    + '<textarea id="share-url" readonly style="width:100%;height:80px;font-size:11px;font-family:monospace;border:1px solid #e5e7eb;border-radius:8px;padding:8px;resize:none;color:#374151;background:#f9fafb;box-sizing:border-box;">'+url+'</textarea>'
-    + '<div style="display:flex;gap:8px;margin-top:12px;">'
-    + '<button id="share-copy-btn" style="flex:1;padding:10px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">'+(copied?'✅ 已复制到剪贴板':'📋 复制链接')+'</button>'
-    + '<button id="share-done" style="padding:10px 16px;background:#f3f4f6;color:#374151;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">关闭</button>'
-    + '</div>'
-    + '<p style="font-size:10px;color:#9ca3af;margin-top:10px;">⚠️ 链接较长，建议通过微信/邮件发送，不要截断。对方数据与你的数据相互独立。</p>'
-    + '</div>';
-  document.body.appendChild(md);
-  document.getElementById('share-close').onclick = function(){ document.body.removeChild(md); };
-  document.getElementById('share-done').onclick = function(){ document.body.removeChild(md); };
-  document.getElementById('share-copy-btn').onclick = function(){
-    var ta = document.getElementById('share-url');
-    ta.select(); ta.setSelectionRange(0,99999);
-    document.execCommand('copy');
-    document.getElementById('share-copy-btn').textContent = '✅ 已复制到剪贴板';
-  };
-}
-
-function importSharedRecords(){
-  var params = new URLSearchParams(window.location.search);
-  var share = params.get('share');
-  if(!share) return;
-  try {
-    var json = decodeURIComponent(atob(share));
-    var imported = JSON.parse(json);
-    if(!Array.isArray(imported) || imported.length === 0) return;
-    // Show import prompt
-    var md = document.createElement('div');
-    md.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;';
-    md.innerHTML = '<div style="background:#fff;border-radius:16px;padding:20px;max-width:360px;width:100%;text-align:center;">'
-      + '<div style="font-size:32px;margin-bottom:12px;">📊</div>'
-      + '<p style="font-size:14px;font-weight:700;color:#111827;margin-bottom:8px;">收到共享的评分记录</p>'
-      + '<p style="font-size:12px;color:#6b7280;margin-bottom:6px;">共 <strong>'+imported.length+'</strong> 条记录，日期范围：</p>'
-      + '<p style="font-size:12px;font-family:monospace;color:#7c3aed;margin-bottom:16px;">'+imported[0].date+' ~ '+imported[imported.length-1].date+'</p>'
-      + '<p style="font-size:11px;color:#9ca3af;margin-bottom:16px;">选择"仅查看"不会修改你自己的本地记录；选择"导入合并"将把这些记录合并到你的本地历史中。</p>'
-      + '<div style="display:flex;gap:8px;">'
-      + '<button id="imp-view" style="flex:1;padding:10px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">仅查看</button>'
-      + '<button id="imp-merge" style="flex:1;padding:10px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">导入合并</button>'
-      + '</div>'
-      + '<button id="imp-cancel" style="margin-top:8px;width:100%;padding:8px;background:#f3f4f6;color:#6b7280;border:none;border-radius:8px;font-size:12px;cursor:pointer;">忽略</button>'
-      + '</div>';
-    document.body.appendChild(md);
-    document.getElementById('imp-cancel').onclick = function(){ document.body.removeChild(md); };
-    document.getElementById('imp-view').onclick = function(){
-      document.body.removeChild(md);
-      renderHistory(imported);
-      document.getElementById('history-section').scrollIntoView({behavior:'smooth'});
-      showMsg('👁️ 正在查看共享记录（共'+imported.length+'条），不影响你的本地数据');
-    };
-    document.getElementById('imp-merge').onclick = function(){
-      document.body.removeChild(md);
-      cloudLoad().then(function(local){
-      imported.forEach(function(r){
-        var key = r.date + '_' + (r.code||'');
-        var idx = local.findIndex(function(x){ return (x.date+'_'+(x.code||'')) === key; });
-        if(idx >= 0) local[idx] = r; else local.push(r);
-      });
-      local.sort(function(a,b){ return a.date.localeCompare(b.date); });
-      cloudSave(local);
-      renderHistory(local);
-      document.getElementById('history-section').scrollIntoView({behavior:'smooth'});
-      showMsg('✅ 已导入合并 '+imported.length+' 条记录到云端');
-      });// end cloudLoad.then
-    };
-  } catch(e){ console.error('Share import error:', e); }
-}
 
 function exportCSV(){
 cloudLoad().then(function(records){
@@ -685,11 +621,11 @@ var url=URL.createObjectURL(blob);var a=document.createElement('a');
 a.href=url;a.download='纳指ETF_评分记录_'+new Date().toISOString().slice(0,10)+'.csv';
 a.click();URL.revokeObjectURL(url);});} // end cloudLoad
 function showMsg(html){var el=g('calcResult');g('calcText').innerHTML=html;el.classList.add('show');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
-// 页面加载时从云端拉取历史记录
-window.addEventListener('load',function(){
-  importSharedRecords();
-  cloudLoad().then(function(records){ renderHistory(records); });
-});
 </script>
+
+<!-- 数据来源 -->
+<div style="text-align:center;font-size:10px;color:#b0b7c3;margin-top:8px;margin-bottom:16px;padding:8px 16px">
+数据来源：TradingView · 红色火箭<br>仅供研究参考，不构成投资建议
+</div>
 </body>
 </html>
