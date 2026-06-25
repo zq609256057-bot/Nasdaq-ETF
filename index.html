@@ -105,9 +105,9 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <div class="entry-field"><label>SMA60</label><input type="number" id="e_sma60" placeholder="e.g. 1.420" step="0.001"></div>
 <div class="entry-field"><label>SMA120</label><input type="number" id="e_sma120" placeholder="e.g. 1.418" step="0.001"></div>
 <div class="entry-field"><label>SMA250</label><input type="number" id="e_sma250" placeholder="e.g. 1.393" step="0.001"></div>
-<div class="entry-field"><label>RSI 14日</label><input type="number" id="e_rsi" placeholder="e.g. 38.5" step="0.1"></div>
-<div class="entry-field"><label>量比（今日/5日均量）</label><input type="number" id="e_vol_ratio" placeholder="e.g. 0.8" step="0.01"></div>
-<div class="entry-field"><label>成交量状态</label><select id="e_vol_state" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="shrink">缩量回调≤0.8</option><option value="flat">平量震荡0.9~1.1</option><option value="mild_up">温和放量上涨</option><option value="big_up">大幅放量上涨</option><option value="mild_down">温和放量下跌</option><option value="big_down">大幅放量下跌</option></select></div>
+<div class="entry-field"><label>VIX 恐慌指数</label><input type="number" id="e_vix" placeholder="e.g. 18.5" step="0.1"></div>
+<div class="entry-field"><label>NQ期货 升贴水</label><select id="e_nq_contango" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="backwardation">深度贴水（看多★）</option><option value="mild_back">轻度贴水</option><option value="normal_contango">正常升水</option><option value="over_contango">过度升水（看空）</option></select></div>
+<div class="entry-field"><label>NQ期货 隔夜表现</label><select id="e_nq_overnight" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="crash">隔夜大跌（机会）</option><option value="small_drop">隔夜小跌</option><option value="big_rally">隔夜大涨（追高）</option></select></div>
 <div class="entry-field"><label>Fib 波段高点</label><input type="number" id="e_fib_high" placeholder="e.g. 1.501" step="0.001"></div>
 <div class="entry-field"><label>Fib 波段低点</label><input type="number" id="e_fib_low" placeholder="e.g. 1.241" step="0.001"></div>
 <div class="entry-field"><label>Fib方向</label><select id="e_fib_dir" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="down">下行寻找支撑（越深越好）</option><option value="up">上行寻找阻力（越浅越好）</option></select></div>
@@ -476,14 +476,6 @@ var trendBonus=0,trendItems=[],trendCount=_sameCode.length;
 if(_sameCode.length>=1){
   var _prev=_sameCode[_sameCode.length-1];var _pf=_prev._form;
   function _pv(k){return parseFloat(_pf[k]);}
-  // RSI趋势
-  var _pRsi=_pv('e_rsi');
-  if(!isNaN(_pRsi)&&!isNaN(rsi)){
-    var _dRsi=rsi-_pRsi;
-    if(_dRsi<=-5&&rsi<=45){trendBonus+=1;trendItems.push('RSI↓'+_pRsi.toFixed(0)+'→'+rsi.toFixed(0)+' +1');}
-    else if(_dRsi>=5&&rsi>=55){trendBonus-=1;trendItems.push('RSI↑'+_pRsi.toFixed(0)+'→'+rsi.toFixed(0)+' -1');}
-    else{trendItems.push('RSI→'+rsi.toFixed(0)+'（平稳）');}
-  }
   // US10Y趋势（利率下行对纳指有利）
   var _pUs10y=_pv('e_us10y');
   if(!isNaN(_pUs10y)&&!isNaN(us10y)){
@@ -591,7 +583,7 @@ var te=g('etf-title');var title=te?te.textContent.trim():' · ';
 var cm=title.match(/\d{6}/);var code=cm?cm[0]:'';
 saveRecord({date:dateVal,code:code,title:title,total:total,valTotal:valTotal,techTotal:techTotal,level:level,
 price:isNaN(price)?null:price,us10y:isNaN(us10y)?null:us10y,erp:isNaN(erp)?null:parseFloat(erp.toFixed(3)),premium:isNaN(premium)?null:premium,
-_form:(function(){var f={};['e_price','e_premium','e_pe_ttm','e_pe_pct','e_forward_pe','e_us10y','e_vix','e_sma60','e_sma120','e_sma250','e_fib_high','e_fib_low','e_fib_zone','e_bull','e_bear','e_andean_trend','e_macd_color','e_macd_pos','e_macd_prev','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight','e_rsi','e_vol_ratio','e_vol_state'].forEach(function(id){f[id]=gv(id);});
+_form:(function(){var f={};['e_price','e_premium','e_pe_ttm','e_pe_pct','e_forward_pe','e_us10y','e_vix','e_sma60','e_sma120','e_sma250','e_fib_high','e_fib_low','e_fib_zone','e_bull','e_bear','e_andean_trend','e_macd_color','e_macd_pos','e_macd_prev','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight'].forEach(function(id){f[id]=gv(id);});
 ['e_andean_just_cross','e_macd_just_green','e_sqz_just_maroon','e_andean_bear_cross','e_macd_just_weak','e_sqz_just_green','e_bear_shrink'].forEach(function(id){var el=g(id);f[id]=el?el.checked:false;});return f;})()});
 showMsg('综合得分：<strong>'+total+'/100</strong>（估值'+valTotal+'+技术'+techTotal+'）');}
 function loadHistory(){return[];}// legacy stub
