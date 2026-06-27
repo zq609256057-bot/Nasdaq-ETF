@@ -95,7 +95,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <div class="entry-field"><label>当前价格（元）</label><input type="number" id="e_price" placeholder="e.g. 2.150" step="0.001"></div>
 <div class="entry-field"><label>溢价/折价率（%）</label><input type="number" id="e_premium" placeholder="e.g. 1.2" step="0.01"></div>
 <div class="entry-field"><label>纳指100 TTM PE（倍）</label><input type="number" id="e_pe_ttm" placeholder="e.g. 35" step="0.1"></div>
-<div class="entry-field"><label>TTM PE 百分位近10年（%）</label><input type="number" id="e_pe_pct" placeholder="e.g. 67" step="0.1"></div>
+<div class="entry-field"><label>TTM PE 百分位·全历史（%）</label><input type="number" id="e_pe_pct" placeholder="e.g. 67" step="0.1"></div>
 <div class="entry-field"><label>Forward PE（倍）</label><input type="number" id="e_forward_pe" placeholder="e.g. 24.4" step="0.1"></div>
 <div class="entry-field"><label>US10Y 美债10年（%）</label><input type="number" id="e_us10y" placeholder="e.g. 4.30" step="0.01"></div>
 <div class="entry-field" style="grid-column:span 2"><label>ERP 风险溢价（%）— 自动计算 = 1/ForwardPE - US10Y</label><input type="number" id="e_erp" placeholder="自动计算" readonly style="background:#f3f4f6;color:var(--muted)"></div>
@@ -212,7 +212,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <!-- Gauge -->
 <div class="card">
 <div class="card-title">④ 估值仪表盘</div>
-<p style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px">PE百分位（近10年）</p>
+<p style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px">PE百分位（全历史）</p>
 <div class="gauge-track"><div class="gauge-ptr" id="pe-ptr" style="left:50%"></div></div>
 <div class="gauge-labels"><span>极低估</span><span>低位</span><span>中性</span><span>偏贵</span><span>泡沫</span></div>
 <div style="text-align:center;margin-top:4px"><span style="font-family:monospace;font-size:13px;font-weight:700;padding:3px 12px;border-radius:20px;background:#ede9fe;color:#5b21b6" id="pe-gauge-label">TTM PE --倍</span></div>
@@ -315,7 +315,7 @@ function sr(id,label,max){
 }
 var html='<div class="card-title">① 量化分解（总分/100）</div>';
 html+='<div style="font-size:10px;font-weight:700;color:var(--blue);margin:6px 0 4px;letter-spacing:.5px">▸ 估值面维度</div>';
-html+=sr('pe','PE百分位TTM',20);html+=sr('fpe','Forward PE',10);html+=sr('us10y','US10Y美债',12);html+=sr('erp','ERP风险溢价',10);html+=sr('premium','溢价/折价率',8);
+html+=sr('pe','PE百分位·全历史',20);html+=sr('fpe','Forward PE',10);html+=sr('us10y','US10Y美债',12);html+=sr('erp','ERP风险溢价',10);html+=sr('premium','溢价/折价率',8);
 html+='<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;padding:5px 0;border-top:.5px solid #e5e7eb;margin-top:4px"><span style="color:#6b7280">估值面小计</span><span id="subtotal-val" style="color:#dc2626;font-family:monospace">-- / 60</span></div>';
 html+='<div style="font-size:10px;font-weight:700;color:var(--blue);margin:10px 0 4px;letter-spacing:.5px">▸ 技术面维度</div>';
 html+=sr('ma','价格与均线',8);html+=sr('fib','斐波那契',7);html+=sr('macd','脉冲MACD',4);html+=sr('andean','动能强弱',3);html+=sr('sqz','挤压动量',3);html+=sr('vix','VIX恐慌指数',10);html+=sr('nq','NQ期货升贴水',5);
