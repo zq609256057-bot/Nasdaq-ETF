@@ -155,6 +155,14 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <button class="btn-calc" onclick="calcScore()">📊 计算评分</button>
 <button class="btn-clear" onclick="clearAll()">清空</button>
 </div>
+<div style="margin-top:8px;padding:10px 12px;background:#eff6ff;border:.5px solid #bfdbfe;border-radius:10px">
+<div style="font-size:11px;font-weight:700;color:#1e40af;margin-bottom:7px">📅 回填历史某交易日数据</div>
+<div style="display:flex;gap:8px;align-items:center">
+<input type="date" id="backfill-date" style="flex:1;font-family:monospace;font-size:12px;padding:7px 10px;border:1px solid #bfdbfe;border-radius:8px;background:#fff;color:#374151;outline:none">
+<button onclick="autoFillHistory()" style="padding:8px 14px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">⏮ 回填该日</button>
+</div>
+<p style="font-size:10px;color:#6b7280;margin-top:6px;line-height:1.5">选个过去的交易日，自动填入当时数据。<b>注意</b>：历史模式下溢价率、Forward PE 无免费数据源需手填，PE-TTM 为近似值。</p>
+</div>
 <div class="calc-result" id="calcResult"><strong>📊 评分结果</strong><br><span id="calcText"></span></div>
 <p style="font-size:10px;color:var(--muted);margin-top:8px">💡 股债利差自动计算；截图发我可帮助识别技术面数据</p>
 </div>
@@ -278,6 +286,17 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <div id="history-table-wrap"><p style="font-size:12px;color:var(--muted)">暂无记录，计算评分后自动保存</p></div>
 </div>
 
+<!-- 数据归档库 -->
+<div class="card" id="archive-section">
+<div class="card-title">⑩ 每日数据归档库</div>
+<p style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6">系统每个交易日自动抓取并存档全部指标（含<b>真实溢价率</b>）。积累越久，历史数据越完整，回填历史日期时优先调用存档值。</p>
+<div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+<button onclick="loadArchive()" class="hist-btn" style="background:#2563eb;color:#fff">🔄 加载归档</button>
+<button onclick="exportArchiveCSV()" class="hist-btn" style="background:#7c3aed;color:#fff">📥 导出归档CSV</button>
+</div>
+<div id="archive-wrap"><p style="font-size:12px;color:var(--muted)">点击「加载归档」查看已积累的历史数据</p></div>
+</div>
+
 <script>
 var STORAGE_KEY='nq_etf_history';
 var API_BASE='https://etf-history-api.zq609256057.workers.dev';
@@ -334,14 +353,248 @@ function clearAll(){
 ['e_andean_just_cross','e_macd_just_green','e_sqz_just_maroon','e_andean_bear_cross','e_macd_just_weak','e_sqz_just_green','e_bear_shrink'].forEach(function(id){var el=g(id);if(el)el.checked=false;});
 g('e_erp').value='';g('prev-wrap').style.display='none';
 var cr=g('calcResult');if(cr)cr.classList.remove('show');}
+// ─── 自动填入配置 ───────────────────────────────────────────
+// 修改此地址为你的 Worker 地址（部署后替换）
+var DATA_API_URL = 'https://etf-data-api-nasdaq.zq609256057.workers.dev/nasdaq-data';
+
+// 自动填入今日数据
 function autoFill(){
-var data={e_price:'2.266',e_premium:'12.37',e_pe_ttm:'35.08',e_pe_pct:'74.96',e_forward_pe:'24.38',e_us10y:'4.455',e_vix:'16.82',
-e_sma60:'2.069',e_sma120:'1.932',e_sma250:'1.844',e_fib_high:'2.576',e_fib_low:'1.666',
-e_bull:'0.2055',e_bear:'0.1787',e_nq_contango:'backwardation',e_nq_overnight:'small_drop',
-e_fib_zone:'above_0382',e_macd_color:'lime',e_macd_pos:'above_far',
-e_andean_trend:'bull_above',e_sqz_color:'red',e_sqz_dot:'black'};
-Object.keys(data).forEach(function(id){var el=g(id);if(el){el.value=data[id];if(['e_fib_zone','e_macd_color','e_macd_pos','e_andean_trend','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight'].indexOf(id)>=0)el.classList.add('sel');}});
-updateSpread();showMsg('✅ 已填入示例数据，请修改为今日实际数据后计算评分');}
+  fetchAndFill(null, document.querySelector('.btn-fill'));
+}
+
+// 回填历史某交易日数据
+function autoFillHistory(){
+  var date = g('backfill-date') ? g('backfill-date').value : '';
+  if(!date){ showMsg('⚠️ 请先选择一个历史日期'); return; }
+  var today = new Date().toISOString().slice(0,10);
+  if(date > today){ showMsg('⚠️ 不能选择未来日期'); return; }
+  var btn = document.querySelector('#backfill-date + button') || event.target;
+  fetchAndFill(date, btn);
+}
+
+// 统一抓取+填入（date为空=最新，否则=历史回填）
+function fetchAndFill(date, btn){
+  var origText = btn ? btn.textContent : '';
+  if(btn){btn.textContent='⏳ 抓取中...';btn.disabled=true;}
+  var label = date ? ('历史数据（'+date+'）') : '最新数据';
+  showMsg('⏳ 正在抓取'+label+'，请稍候…');
+
+  var url = DATA_API_URL + (date ? ('?date='+date) : '');
+
+  var timeout = setTimeout(function(){
+    if(btn){btn.textContent=origText;btn.disabled=false;}
+    if(date){ showMsg('⚠️ 历史数据抓取超时，请重试或手动填写'); }
+    else { autoFillDemo('⚠️ 网络超时，已填入示例数据，请手动更新'); }
+  }, 15000);
+
+  fetch(url)
+    .then(function(r){
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    })
+    .then(function(d){
+      clearTimeout(timeout);
+      if(btn){btn.textContent=origText;btn.disabled=false;}
+      applyAutoData(d);
+      // 历史模式：自动把看板日期设为回填日期
+      if(date && g('header-date')) g('header-date').value = date;
+    })
+    .catch(function(err){
+      clearTimeout(timeout);
+      if(btn){btn.textContent=origText;btn.disabled=false;}
+      if(date){ showMsg('⚠️ 历史数据抓取失败（'+err.message+'），请手动填写'); }
+      else { autoFillDemo('⚠️ 数据抓取失败（'+err.message+'），已填入示例数据'); }
+    });
+}
+
+// 将 Worker 返回数据填入表单
+function applyAutoData(d){
+  var filled = [], missing = [];
+
+  // ── 自动填入：VIX ──
+  if(d.vix != null){
+    setVal('e_vix', d.vix);
+    filled.push('VIX='+d.vix);
+  } else { missing.push('VIX'); }
+
+  // ── 自动填入：US10Y ──
+  if(d.us10y != null){
+    setVal('e_us10y', d.us10y);
+    filled.push('US10Y='+d.us10y+'%');
+  } else { missing.push('US10Y'); }
+
+  // ── 自动填入：513100 价格 + 溢价率 ──
+  if(d.price_513100 != null){
+    setVal('e_price', d.price_513100);
+    filled.push('价格='+d.price_513100);
+  } else { missing.push('513100价格'); }
+
+  if(d.premium_513100 != null){
+    setVal('e_premium', d.premium_513100);
+    filled.push('溢价率='+d.premium_513100+'%');
+  } else { missing.push('溢价率'); }
+
+  // ── 自动填入：NQ期货升贴水 ──
+  if(d.nq_contango_value){
+    setSelect('e_nq_contango', d.nq_contango_value);
+    filled.push('升贴水='+d.nq_contango_label);
+  }
+
+  // ── 自动填入：NQ隔夜表现 ──
+  if(d.nq_overnight_value){
+    setSelect('e_nq_overnight', d.nq_overnight_value);
+    filled.push('隔夜='+d.nq_overnight_label);
+  }
+
+  // ── 自动填入：PE TTM ──
+  if(d.pe_ttm != null){
+    setVal('e_pe_ttm', d.pe_ttm);
+    filled.push('PE-TTM='+d.pe_ttm);
+  } else { missing.push('PE-TTM'); }
+
+  // ── 自动填入：Forward PE ──
+  if(d.forward_pe != null){
+    setVal('e_forward_pe', d.forward_pe);
+    filled.push('FwdPE='+d.forward_pe);
+  } else { missing.push('ForwardPE'); }
+
+  // ── 自动填入：PE百分位 ──
+  if(d.pe_pct && d.pe_pct.value != null){
+    setVal('e_pe_pct', d.pe_pct.value);
+    var sampleNote = d.pe_pct.sample_size < 250
+      ? '（积累中'+d.pe_pct.sample_size+'条）'
+      : '（'+d.pe_pct.sample_size+'条历史）';
+    filled.push('PE分位='+d.pe_pct.value+'%'+sampleNote);
+  } else {
+    missing.push('PE百分位(首日运行后自动积累)');
+  }
+
+  // ── 自动填入：SMA60 / SMA120 / SMA250 ──
+  if(d.sma60 != null){
+    setVal('e_sma60', d.sma60);
+    filled.push('SMA60='+d.sma60);
+  } else { missing.push('SMA60'); }
+
+  if(d.sma120 != null){
+    setVal('e_sma120', d.sma120);
+    filled.push('SMA120='+d.sma120);
+  } else { missing.push('SMA120'); }
+
+  if(d.sma250 != null){
+    setVal('e_sma250', d.sma250);
+    filled.push('SMA250='+d.sma250);
+  } else {
+    missing.push('SMA250(数据不足250日)');
+  }
+
+  // 触发 ERP 自动计算
+  updateERP();
+
+  // 更新数据来源标注
+  var srcDate = d._fetchedDate || new Date().toISOString().slice(0,10);
+  var isHist = (d._mode === 'historical');
+  var isArchived = (d._mode === 'archived');
+  var cacheNote = (isHist||isArchived) ? '' : (d._fromCache ? '（缓存'+Math.round((d._cacheAge||0)/60)+'分钟前）' : '（刚抓取）');
+
+  // 组装结果消息
+  var msg = '';
+  if(isArchived){
+    msg += '<strong style="color:#059669">📦 命中归档库 · '+(d._requestedDate||srcDate)+'（含真实溢价率）</strong><br>';
+  } else if(isHist){
+    msg += '<strong style="color:#1e40af">⏮ 历史回填模式 · 请求日期 '+(d._requestedDate||srcDate)+'</strong><br>';
+  } else {
+    msg += '<strong>✅ 已自动填入 ' + filled.length + ' 项数据</strong> ' + cacheNote + '<br>';
+  }
+  msg += '<span style="color:#059669">● 已填入：' + filled.join(' / ') + '</span><br>';
+  if(missing.length){
+    msg += '<span style="color:#d97706">● 需手动填：' + missing.join(', ') + '</span><br>';
+  }
+
+  // ── 各数据源实际日期（关键：让你看清每项是哪天的数据）──
+  var dateLines = [];
+  if(d.etf_date)  dateLines.push('513100价格 @ '+d.etf_date);
+  if(d.sma_as_of||d.ndx_date) dateLines.push('SMA截止 @ '+(d.sma_as_of||d.ndx_date));
+  if(d.ndx_date)  dateLines.push('NDX/NQ @ '+d.ndx_date);
+  // VIX和US10Y的日期Worker未单独返回，但它们对齐到targetDate或最新交易日
+
+  msg += '<div style="margin-top:6px;padding:7px 9px;background:#f8fafc;border-radius:7px;border:.5px solid #e2e8f0">';
+  msg += '<span style="font-size:10px;font-weight:700;color:#374151">📆 各数据实际日期</span><br>';
+  msg += '<span style="font-size:10px;color:#6b7280;line-height:1.6">';
+  msg += dateLines.length ? dateLines.join(' · ') : ('对齐至 '+srcDate);
+  // 日期不一致警告
+  var dates = [d.etf_date, d.ndx_date].filter(Boolean);
+  var uniqDates = dates.filter(function(v,i){return dates.indexOf(v)===i;});
+  if(uniqDates.length > 1){
+    msg += '<br><span style="color:#d97706;font-weight:600">⚠️ 注意：各数据源日期不完全一致（中美休市日不同），请核对后使用</span>';
+  }
+  msg += '</span></div>';
+
+  msg += '<span style="color:#9ca3af;font-size:10px;display:block;margin-top:4px">NDX涨跌：'+(d.ndx_change_pct!=null?(d.ndx_change_pct>0?'+':'')+d.ndx_change_pct+'%':'--');
+  msg += ' | NQ升贴水率：'+(d.nq_premium_rate!=null?d.nq_premium_rate.toFixed(2)+'%':'--')+'</span>';
+
+  // 历史模式额外提示
+  if(isArchived){
+    msg += '<div style="margin-top:6px;padding:7px 9px;background:#f0fdf4;border-radius:7px;font-size:10px;color:#065f46;line-height:1.6">';
+    msg += '✅ 该日已在归档库中，所有数据（含溢价率、Forward PE、真实PE）均为当天存档的真实值，无需手填。</div>';
+  } else if(isHist){
+    msg += '<div style="margin-top:6px;padding:7px 9px;background:#fef3c7;border-radius:7px;font-size:10px;color:#92400e;line-height:1.6">';
+    msg += '⚠️ 该日未在归档库（系统上线前的日期）：溢价率、Forward PE 需手填；';
+    msg += 'PE-TTM 为近似值。<b>系统上线后每天自动存档，之后回填这些日期就能拿到真实值。</b></div>';
+  }
+
+  // 显示 NDX 涨跌幅到 KPI 区域
+  if(d.ndx_change_pct != null){
+    var ndxEl = document.getElementById('kpi-price-sub');
+    if(ndxEl) ndxEl.textContent = 'NDX '+(d.ndx_date||'')+' '+(d.ndx_change_pct>0?'+':'')+d.ndx_change_pct+'%';
+  }
+
+  showMsg(msg);
+  showManualReminder();
+}
+
+// 设置 input 值的辅助函数
+function setVal(id, val){
+  var el = g(id);
+  if(el) el.value = val;
+}
+
+// 设置 select 值并标记已选择
+function setSelect(id, val){
+  var el = g(id);
+  if(el){ el.value = val; el.classList.add('sel'); }
+}
+
+// 显示手动填写提醒
+function showManualReminder(){
+  var remind = document.getElementById('manual-remind');
+  if(!remind){
+    remind = document.createElement('div');
+    remind.id = 'manual-remind';
+    remind.style.cssText = 'margin-top:8px;padding:10px 12px;background:#faf5ff;border:.5px solid #e9d5ff;border-radius:10px;font-size:11px;color:#5b21b6;line-height:1.7';
+    var calcResult = document.getElementById('calcResult');
+    if(calcResult) calcResult.after(remind);
+  }
+  remind.innerHTML = '<strong>📝 剩余需手动填写的项目：</strong><br>'
+    + '① Fib 高低点 + 方向 + 区域 → TradingView 波段<br>'
+    + '② Andean bull/bear 值 + 趋势状态 → TradingView 指标<br>'
+    + '③ MACD 颜色 + 零轴位置 → TradingView 指标<br>'
+    + '④ Squeeze 颜色 + 中轴点 → TradingView 指标<br>'
+    + '⑤ 底部/顶部转变信号（主观判断）<br>'
+    + '<span style="color:#059669">✅ SMA60/120/250 / PE-TTM / Forward PE / PE百分位 / VIX / US10Y / 价格 / 溢价率 / NQ升贴水 → 全部已自动填入</span>';
+  remind.style.display = 'block';
+}
+
+// 降级：填入示例数据（网络故障时）
+function autoFillDemo(msg){
+  var data={e_price:'2.266',e_premium:'12.37',e_pe_ttm:'35.08',e_pe_pct:'74.96',e_forward_pe:'24.38',e_us10y:'4.455',e_vix:'16.82',
+  e_sma60:'2.069',e_sma120:'1.932',e_sma250:'1.844',e_fib_high:'2.576',e_fib_low:'1.666',
+  e_bull:'0.2055',e_bear:'0.1787',e_nq_contango:'backwardation',e_nq_overnight:'small_drop',
+  e_fib_zone:'above_0382',e_macd_color:'lime',e_macd_pos:'above_far',
+  e_andean_trend:'bull_above',e_sqz_color:'red',e_sqz_dot:'black'};
+  Object.keys(data).forEach(function(id){var el=g(id);if(el){el.value=data[id];if(['e_fib_zone','e_macd_color','e_macd_pos','e_andean_trend','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight'].indexOf(id)>=0)el.classList.add('sel');}});
+  updateERP();
+  showMsg(msg||'✅ 已填入示例数据，请修改为今日实际数据后计算评分');
+}
 function calcScore(){
 var price=parseFloat(gv('e_price')),premium=parseFloat(gv('e_premium'));
 var peTtm=parseFloat(gv('e_pe_ttm')),pePct=parseFloat(gv('e_pe_pct'));
@@ -818,12 +1071,84 @@ var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
 var url=URL.createObjectURL(blob);var a=document.createElement('a');
 a.href=url;a.download='纳指ETF_评分记录_'+new Date().toISOString().slice(0,10)+'.csv';
 a.click();URL.revokeObjectURL(url);});} // end cloudLoad
+// ── 归档库：基础URL（去掉/nasdaq-data后缀，换成/archive）──
+var ARCHIVE_API_URL = DATA_API_URL.replace('/nasdaq-data','') + '/archive';
+window._archiveData = [];
+
+// 加载归档数据
+function loadArchive(){
+  var wrap = g('archive-wrap');
+  if(wrap) wrap.innerHTML = '<p style="font-size:12px;color:var(--muted)">⏳ 加载中...</p>';
+  fetch(ARCHIVE_API_URL)
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(res){
+      window._archiveData = res.data || [];
+      renderArchive(res);
+    })
+    .catch(function(err){
+      if(wrap) wrap.innerHTML = '<p style="font-size:12px;color:#dc2626">加载失败：'+err.message+'</p>';
+    });
+}
+
+// 渲染归档表格
+function renderArchive(res){
+  var wrap = g('archive-wrap');
+  if(!wrap) return;
+  var data = res.data || [];
+  if(data.length === 0){
+    wrap.innerHTML = '<p style="font-size:12px;color:var(--muted)">归档库暂无数据。系统每个交易日自动存档，明天起会逐日积累。</p>';
+    return;
+  }
+  // 倒序显示（最新在上），最多显示最近30条
+  var rev = [].concat(data).reverse().slice(0, 30);
+  var rows = rev.map(function(r){
+    var premColor = r.premium==null ? '#9ca3af' : (Math.abs(r.premium)<=1?'#059669':r.premium>3?'#dc2626':'#d97706');
+    return '<tr>'
+      +'<td style="padding:5px 6px;font-size:11px;white-space:nowrap;color:var(--blue);font-weight:600">'+r.date+'</td>'
+      +'<td style="padding:5px 6px;font-size:11px;font-family:monospace">'+(r.price!=null?r.price:'--')+'</td>'
+      +'<td style="padding:5px 6px;font-size:11px;font-family:monospace;color:'+premColor+';font-weight:600">'+(r.premium!=null?(r.premium>0?'+':'')+r.premium+'%':'--')+'</td>'
+      +'<td style="padding:5px 6px;font-size:11px;font-family:monospace">'+(r.vix!=null?r.vix:'--')+'</td>'
+      +'<td style="padding:5px 6px;font-size:11px;font-family:monospace">'+(r.us10y!=null?r.us10y+'%':'--')+'</td>'
+      +'<td style="padding:5px 6px;font-size:11px;font-family:monospace">'+(r.pe_ttm!=null?r.pe_ttm:'--')+'</td>'
+      +'<td style="padding:5px 6px;font-size:11px;font-family:monospace">'+(r.pe_pct!=null?r.pe_pct+'%':'--')+'</td>'
+      +'</tr>';
+  }).join('');
+  var thead = '<thead><tr style="border-bottom:1.5px solid #e5e7eb">'
+    +'<th style="padding:0 6px 5px;font-size:10px;color:var(--blue);text-align:left">日期</th>'
+    +'<th style="padding:0 6px 5px;font-size:10px;color:var(--muted);text-align:left">价格</th>'
+    +'<th style="padding:0 6px 5px;font-size:10px;color:var(--muted);text-align:left">溢价率</th>'
+    +'<th style="padding:0 6px 5px;font-size:10px;color:var(--muted);text-align:left">VIX</th>'
+    +'<th style="padding:0 6px 5px;font-size:10px;color:var(--muted);text-align:left">US10Y</th>'
+    +'<th style="padding:0 6px 5px;font-size:10px;color:var(--muted);text-align:left">PE</th>'
+    +'<th style="padding:0 6px 5px;font-size:10px;color:var(--muted);text-align:left">PE分位</th>'
+    +'</tr></thead>';
+  wrap.innerHTML = '<div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px">📦 共 '+res.total_archived+' 个交易日 · '+(res.date_range||'')+'</div>'
+    +'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:420px">'+thead+'<tbody>'+rows+'</tbody></table></div>'
+    +'<p style="font-size:10px;color:var(--muted);margin-top:6px">显示最近'+rev.length+'条 · 完整数据请导出CSV · 含真实历史溢价率</p>';
+}
+
+// 导出归档CSV
+function exportArchiveCSV(){
+  var data = window._archiveData || [];
+  if(data.length === 0){ alert('请先点「加载归档」'); return; }
+  var header = ['日期','价格','溢价率%','VIX','US10Y%','NDX收盘','NDX涨跌%','NQ升贴水%','PE-TTM','ForwardPE','PE分位%','SMA60','SMA120','SMA250'];
+  var rows = data.map(function(r){
+    return [r.date, r.price||'', r.premium||'', r.vix||'', r.us10y||'', r.ndx_close||'', r.ndx_chg||'', r.nq_premium||'', r.pe_ttm||'', r.forward_pe||'', r.pe_pct||'', r.sma60||'', r.sma120||'', r.sma250||''].join(',');
+  });
+  var csv = '\uFEFF'+header.join(',')+'\n'+rows.join('\n');
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = '纳指ETF_每日归档_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
 function showMsg(html){var el=g('calcResult');g('calcText').innerHTML=html;el.classList.add('show');el.scrollIntoView({behavior:'smooth',block:'nearest'});}
 </script>
 
 <!-- 数据来源 -->
 <div style="text-align:center;font-size:10px;color:#b0b7c3;margin-top:8px;margin-bottom:16px;padding:8px 16px">
-数据来源：TradingView · 红色火箭<br>仅供研究参考，不构成投资建议
+数据来源：CBOE · FRED · Yahoo Finance · 集思录 · TradingView · 红色火箭<br>仅供研究参考，不构成投资建议
 </div>
 </body>
 </html>
