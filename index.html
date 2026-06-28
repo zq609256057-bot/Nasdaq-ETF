@@ -280,7 +280,8 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <div class="card" id="history-section">
 <div class="card-title">⑨ 历史评分记录</div>
 <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;grid-column:1/-1"><input id="hist-search" type="text" inputmode="numeric" maxlength="6" placeholder="输入代码检索历史..." style="flex:1;padding:7px 10px;border-radius:8px;border:.5px solid #e5e7eb;font-size:12px;background:#eff6ff;color:#374151;outline:none;font-family:monospace" oninput="searchHistory(this.value)"><button onclick="searchHistory(document.getElementById('hist-search').value)" style="padding:7px 12px;border-radius:8px;background:#2563eb;color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">🔍 检索</button><button onclick="document.getElementById('hist-search').value='';renderHistory(window._etfHistory||[])" style="padding:7px 10px;border-radius:8px;background:#f3f4f6;color:var(--muted);border:.5px solid #e5e7eb;font-size:12px;cursor:pointer">✕</button></div><button class="hist-btn" onclick="exportCSV()" style="background:#7c3aed;color:#fff">📥 导出CSV</button>
+<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;grid-column:1/-1"><input id="hist-search" type="text" inputmode="numeric" maxlength="6" placeholder="输入代码检索历史..." style="flex:1;padding:7px 10px;border-radius:8px;border:.5px solid #e5e7eb;font-size:12px;background:#eff6ff;color:#374151;outline:none;font-family:monospace" oninput="searchHistory(this.value)"><button onclick="searchHistory(document.getElementById('hist-search').value)" style="padding:7px 12px;border-radius:8px;background:#2563eb;color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">🔍 检索</button><button onclick="document.getElementById('hist-search').value='';renderHistory(window._etfHistory||[])" style="padding:7px 10px;border-radius:8px;background:#f3f4f6;color:var(--muted);border:.5px solid #e5e7eb;font-size:12px;cursor:pointer">✕</button></div><button class="hist-btn" onclick="showMonthly()" style="background:#059669;color:#fff">📊 月度汇总</button>
+<button class="hist-btn" onclick="exportCSV()" style="background:#7c3aed;color:#fff">📥 导出CSV</button>
 <button class="hist-btn" onclick="clearHistory()" style="background:#f3f4f6;color:var(--muted);border:1px solid #e5e7eb">🗑️ 清除记录</button>
 </div>
 <div id="history-table-wrap"><p style="font-size:12px;color:var(--muted)">暂无记录，计算评分后自动保存</p></div>
@@ -456,7 +457,7 @@ function applyAutoData(d){
   if(d.forward_pe != null){
     setVal('e_forward_pe', d.forward_pe);
     filled.push('FwdPE='+d.forward_pe);
-  } else { missing.push('ForwardPE'); }
+  } else { missing.push('Forward PE（正在尝试自动获取...）'); }
 
   // ── 自动填入：PE百分位 ──
   if(d.pe_pct && d.pe_pct.value != null){
@@ -512,10 +513,9 @@ function applyAutoData(d){
 
   // ── 各数据源实际日期（关键：让你看清每项是哪天的数据）──
   var dateLines = [];
-  if(d.etf_date)  dateLines.push('513100价格 @ '+d.etf_date);
-  if(d.sma_as_of||d.ndx_date) dateLines.push('SMA截止 @ '+(d.sma_as_of||d.ndx_date));
-  if(d.ndx_date)  dateLines.push('NDX/NQ @ '+d.ndx_date);
-  // VIX和US10Y的日期Worker未单独返回，但它们对齐到targetDate或最新交易日
+  if(d.etf_date)  dateLines.push('513100 @ '+d.etf_date);
+  if(d.us10y_date) dateLines.push('US10Y @ '+d.us10y_date);
+  if(d.sma_as_of||d.ndx_date) dateLines.push('SMA/NDX @ '+(d.sma_as_of||d.ndx_date));
 
   msg += '<div style="margin-top:6px;padding:7px 9px;background:#f8fafc;border-radius:7px;border:.5px solid #e2e8f0">';
   msg += '<span style="font-size:10px;font-weight:700;color:#374151">📆 各数据实际日期</span><br>';
@@ -544,8 +544,13 @@ function applyAutoData(d){
 
   // 显示 NDX 涨跌幅到 KPI 区域
   if(d.ndx_change_pct != null){
+    // kpi-price-sub：显示 ETF 数据来源和溢价率摘要
     var ndxEl = document.getElementById('kpi-price-sub');
-    if(ndxEl) ndxEl.textContent = 'NDX '+(d.ndx_date||'')+' '+(d.ndx_change_pct>0?'+':'')+d.ndx_change_pct+'%';
+    if(ndxEl){
+      var subTxt = d._etfSource === 'eastmoney' ? '东方财富实时' : (d._etfNote ? 'Yahoo备用价格' : '');
+      if(d.ndx_change_pct != null) subTxt += ' · NDX '+(d.ndx_change_pct>0?'+':'')+d.ndx_change_pct+'%';
+      ndxEl.textContent = subTxt;
+    }
   }
 
   showMsg(msg);
@@ -586,7 +591,7 @@ function showManualReminder(){
 
 // 降级：填入示例数据（网络故障时）
 function autoFillDemo(msg){
-  var data={e_price:'2.266',e_premium:'12.37',e_pe_ttm:'35.08',e_pe_pct:'74.96',e_forward_pe:'24.38',e_us10y:'4.455',e_vix:'16.82',
+  var data={e_price:'2.266',e_premium:'1.2',e_pe_ttm:'35.08',e_pe_pct:'74.96',e_forward_pe:'24.38',e_us10y:'4.455',e_vix:'16.82',
   e_sma60:'2.069',e_sma120:'1.932',e_sma250:'1.844',e_fib_high:'2.576',e_fib_low:'1.666',
   e_bull:'0.2055',e_bear:'0.1787',e_nq_contango:'backwardation',e_nq_overnight:'small_drop',
   e_fib_zone:'above_0382',e_macd_color:'lime',e_macd_pos:'above_far',
@@ -621,7 +626,7 @@ var bondS=isNaN(us10y)?0:(us10y<=3.5?12:us10y<=4.0?9:us10y<=4.5?6:us10y<=5.0?3:0
 sb('us10y',bondS,12);sp('us10y',bondS,12);sd('us10y',isNaN(us10y)?'未填入':us10y<=3.5?'低利率 友好':us10y<=4.0?'适中':us10y<=4.5?'偏高承压':'高利率压估值');valTotal+=bondS;
 var erpS=isNaN(erp)?0:(erp>=3?10:erp>=2?8:erp>=1?6:erp>=0?4:erp>=-1?2:0);
 sb('erp',erpS,10);sp('erp',erpS,10);sd('erp',isNaN(erp)?'未填入':erp>=2?'高风险溢价':erp>=1?'偏高看多':erp>=0?'正值中性':'负值高估');valTotal+=erpS;
-var premS=isNaN(premium)?8:(Math.abs(premium)<=2?8:premium<=5?5:premium<=10?2:0);
+var premS=isNaN(premium)?4:(Math.abs(premium)<=2?8:premium<=5?5:premium<=10?2:0);
 sb('premium',premS,8);sp('premium',premS,8);sd('premium',isNaN(premium)?'未填入':Math.abs(premium)<=0.5?'贴近净值':premium>2?'溢价偏高':premium<-2?'折价明显':'正常范围');valTotal+=premS;
 g('subtotal-val').textContent=valTotal+' / 60';g('subtotal-val').style.color=sc(valTotal,60);
 var maS=4,maDesc='均线数据不足';
@@ -716,7 +721,7 @@ var vixS=isNaN(vix)?0:(vix>40?10:vix>=35?9:vix>=30?8:vix>=27?7:vix>=25?6:vix>=22
 sb('vix',vixS,10);sp('vix',vixS,10);sd('vix',isNaN(vix)?'未填入':vix>40?'极度恐慌★':vix>=30?'高恐慌':vix>=20?'中性偏谨慎':'低恐慌 乐观');techTotal+=vixS;
 var contMap={backwardation:2,mild_back:1.5,normal_contango:1,over_contango:0};
 var nightMap={crash:1,small_drop:0.5,big_rally:0};
-var nqS=Math.min(5,(contMap[nqCont]||1)+(nightMap[nqNight]||0.5));
+var nqS=nqCont?Math.min(5,(contMap[nqCont]||1)+(nightMap[nqNight]||0.5)):0;
 sb('nq',nqS,5);sp('nq',nqS,5);sd('nq',nqCont==='backwardation'?'期货贴水看多':nqCont==='mild_back'?'轻微贴水':nqNight==='crash'?'夜盘大跌警示':'正常升水');techTotal+=nqS;
 g('subtotal-tech').textContent=techTotal+' / 40';g('subtotal-tech').style.color=sc(techTotal,40);
 total=valTotal+techTotal;
@@ -1148,7 +1153,7 @@ function showMsg(html){var el=g('calcResult');g('calcText').innerHTML=html;el.cl
 
 <!-- 数据来源 -->
 <div style="text-align:center;font-size:10px;color:#b0b7c3;margin-top:8px;margin-bottom:16px;padding:8px 16px">
-数据来源：CBOE · FRED · Yahoo Finance · 集思录 · TradingView · 红色火箭<br>仅供研究参考，不构成投资建议
+数据来源：CBOE · FRED · Yahoo Finance · 东方财富 · TradingView · 红色火箭<br>仅供研究参考，不构成投资建议
 </div>
 </body>
 </html>
