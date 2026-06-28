@@ -453,11 +453,12 @@ function applyAutoData(d){
     filled.push('PE-TTM='+d.pe_ttm);
   } else { missing.push('PE-TTM'); }
 
-  // ── 自动填入：Forward PE ──
+  // ── 自动填入：Forward PE（成分股加权聚合的真实值）──
   if(d.forward_pe != null){
     setVal('e_forward_pe', d.forward_pe);
-    filled.push('FwdPE='+d.forward_pe);
-  } else { missing.push('Forward PE（正在尝试自动获取...）'); }
+    var fwdTag = d._fwdCount ? ('(聚合'+d._fwdCount+'股/覆盖'+d._fwdWeight+'%)') : '';
+    filled.push('FwdPE='+d.forward_pe+fwdTag);
+  } else { missing.push('Forward PE'); }
 
   // ── 自动填入：PE百分位 ──
   if(d.pe_pct && d.pe_pct.value != null){
