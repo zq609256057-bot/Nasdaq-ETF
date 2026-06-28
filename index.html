@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>纳指ETF看板</title>
+<title>纳指ETF·513100</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;max-width:100%}
 :root{--bg:#f3f4f6;--card:#fff;--bd:rgba(0,0,0,.07);--red:#dc2626;--green:#059669;--blue:#2563eb;--amber:#d97706;--purple:#7c3aed;--muted:#6b7280;--shadow:0 1px 4px rgba(0,0,0,.06),0 0 0 .5px rgba(0,0,0,.04)}
@@ -170,7 +170,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <!-- Header -->
 <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px">
 <div style="flex:1;min-width:0">
-<h1 id="etf-title" contenteditable="true" spellcheck="false" style="font-size:20px;font-weight:700;outline:none;border-radius:6px;padding:2px 4px;margin-left:-4px;cursor:text" title="点击编辑标题"> · </h1>
+<h1 id="etf-title" contenteditable="true" spellcheck="false" style="font-size:20px;font-weight:700;outline:none;border-radius:6px;padding:2px 4px;margin-left:-4px;cursor:text" title="点击编辑标题">纳指ETF·513100</h1>
 <div style="display:flex;align-items:center;justify-content:space-between;gap:4px;margin-top:4px">
 <div style="display:flex;align-items:center;gap:4px"><span style="font-size:12px;color:var(--muted)">多维量化看板 ·</span><input type="date" id="header-date" class="date-input"></div>
 <span id="header-badge" class="header-badge">填入数据后计算</span>
@@ -970,7 +970,6 @@ var f=r._form;Object.keys(f).forEach(function(id){var el=g(id);if(el)el.value=f[
 ['e_fib_zone','e_macd_color','e_macd_pos','e_macd_prev','e_andean_trend','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight'].forEach(function(id){var el=g(id);if(el&&f[id])el.classList.add('sel');});
 ['e_andean_just_cross','e_macd_just_green','e_sqz_just_maroon','e_andean_bear_cross','e_macd_just_weak','e_sqz_just_green','e_bear_shrink'].forEach(function(id){var el=g(id);if(el)el.checked=!!f[id];});
 var hd=g('header-date');if(hd)hd.value=r.date;
-var te2=g('etf-title');if(te2&&r.title)te2.textContent=r.title;
 var te=g('etf-title');if(te&&r.title)te.textContent=r.title;
 updateERP();togglePrev();calcScore();
 var ec=document.querySelector('.card');if(ec)ec.scrollIntoView({behavior:'smooth',block:'start'});
