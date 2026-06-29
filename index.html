@@ -9,7 +9,7 @@
 img,video,svg,canvas{max-width:100%}
 :root{--bg:#f3f4f6;--card:#fff;--bd:rgba(0,0,0,.07);--red:#dc2626;--green:#059669;--blue:#2563eb;--amber:#d97706;--purple:#7c3aed;--muted:#6b7280;--shadow:0 1px 4px rgba(0,0,0,.06),0 0 0 .5px rgba(0,0,0,.04)}
 body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#111827;min-height:100vh;padding:16px;overflow-x:hidden}
-.card{background:var(--card);border-radius:12px;box-shadow:var(--shadow);border:.5px solid var(--bd);padding:16px;margin-bottom:12px;overflow:hidden}
+.card{background:var(--card);border-radius:12px;box-shadow:var(--shadow);border:.5px solid var(--bd);padding:16px;margin-bottom:12px;overflow:hidden;width:100%;box-sizing:border-box}
 .card-title{font-size:13px;font-weight:700;margin-bottom:12px;padding-left:10px;border-left:3px solid var(--blue);white-space:nowrap}
 .score-hero{background:var(--card);border-radius:16px;box-shadow:var(--shadow);border:.5px solid var(--bd);padding:24px 20px;margin-bottom:16px;text-align:center}
 .score-big{font-family:monospace;font-size:72px;font-weight:700;line-height:1}
@@ -68,7 +68,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 .entry-field input,.entry-field select{font-family:monospace;font-size:13px;padding:7px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#f9fafb;color:#111827;outline:none;width:100%}
 .entry-field input:focus,.entry-field select:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(124,58,237,.1);background:#fff}
 .entry-field select{color:var(--muted)}.entry-field select.sel{color:#111827}
-.entry-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.entry-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%}
 .btn-row{display:flex;flex-direction:row;flex-wrap:nowrap;gap:8px;margin-top:12px;width:100%}
 .btn-calc{flex:2;min-width:0;padding:10px;background:#059669;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
 .btn-fill{flex:2;min-width:0;padding:10px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
@@ -126,11 +126,11 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <button class="btn-calc" onclick="calcScore()">📊 计算评分</button>
 <button class="btn-clear" onclick="clearAll()">清空</button>
 </div>
-<div style="margin-top:8px;padding:10px 12px;background:#eff6ff;border:.5px solid #bfdbfe;border-radius:10px">
+<div style="margin-top:8px;padding:10px 12px;background:#eff6ff;border:.5px solid #bfdbfe;border-radius:10px;width:100%;box-sizing:border-box">
 <div style="font-size:11px;font-weight:700;color:#1e40af;margin-bottom:7px">📅 回填历史某交易日数据</div>
-<div style="display:flex;gap:8px;align-items:center">
-<input type="date" id="backfill-date" style="flex:1;font-family:monospace;font-size:12px;padding:7px 10px;border:1px solid #bfdbfe;border-radius:8px;background:#fff;color:#374151;outline:none">
-<button onclick="autoFillHistory()" style="padding:8px 14px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">⏮ 回填该日</button>
+<div style="display:flex;gap:8px;align-items:center;width:100%">
+<input type="date" id="backfill-date" style="flex:1;min-width:0;font-family:monospace;font-size:12px;padding:7px 10px;border:1px solid #bfdbfe;border-radius:8px;background:#fff;color:#374151;outline:none">
+<button onclick="autoFillHistory()" style="flex-shrink:0;padding:8px 14px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">⏮ 回填该日</button>
 </div>
 <p style="font-size:10px;color:#6b7280;margin-top:6px;line-height:1.5">选个过去的交易日，自动填入当时数据。<b>注意</b>：历史模式下溢价率、Forward PE 无免费数据源需手填，PE-TTM 为近似值。</p>
 </div>
