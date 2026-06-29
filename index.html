@@ -112,43 +112,13 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <div class="entry-field"><label>Fib 波段低点</label><input type="number" id="e_fib_low" placeholder="e.g. 1.241" step="0.001"></div>
 <div class="entry-field"><label>Fib方向</label><select id="e_fib_dir" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="down">下行寻找支撑（越深越好）</option><option value="up">上行寻找阻力（越浅越好）</option></select></div>
 <div class="entry-field"><label>斐波那契所处区域</label><select id="e_fib_zone" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="above_1382">1.382及以上（极深/极浅）</option><option value="b1_1382">1~1.382区间</option><option value="b0786_1">0.786~1区间</option><option value="above_0786">位于0.786以上</option><option value="golden">0.618~0.786 黄金区</option><option value="near_05">0.5附近（0.382~0.618）</option><option value="above_0382">高于0.382（回调不充分）</option></select></div>
-<div class="entry-field"><label>Andean 绿线 bull 值</label><input type="number" id="e_bull" placeholder="e.g. 0.0000" step="0.0001"></div>
-<div class="entry-field"><label>Andean 红线 bear 值</label><input type="number" id="e_bear" placeholder="e.g. 0.0217" step="0.0001"></div>
-<div class="entry-field"><label>Andean 趋势状态</label><select id="e_andean_trend" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="bull_cross">绿线刚上穿红线</option><option value="bull_above">绿&gt;红（多头主导）</option><option value="bull_lt_bear">绿&gt;0且&lt;红（多头弱）</option><option value="bull_zero">绿线=0（多头消失）</option><option value="bear_zero">红线=0（空头消失）</option></select></div>
-<div class="entry-field"><label>脉冲MACD 颜色</label><select id="e_macd_color" onchange="this.classList.add('sel');togglePrev()"><option value="">请选择</option><option value="lime">🟢 亮绿 Lime（极强）</option><option value="green">🌲 深绿 Green（偏多）</option><option value="orange">🟠 橙色 Orange（偏空）</option><option value="red">🔴 红色 Red（极弱）</option><option value="none">⬜ 无色（震荡）</option></select></div>
-<div class="entry-field"><label>脉冲MACD 零轴位置</label><select id="e_macd_pos" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="above_near">主柱&gt;0 靠近零轴</option><option value="above_far">主柱&gt;0 远离零轴</option><option value="below_near">主柱&lt;0 靠近零轴</option><option value="below_far">主柱&lt;0 远离零轴</option></select></div>
-<div class="entry-field" id="prev-wrap" style="display:none"><label>上一根MACD颜色（无色时）</label><select id="e_macd_prev" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="lime">🟢 Lime</option><option value="green">🌲 Green</option><option value="orange">🟠 Orange</option><option value="red">🔴 Red</option></select></div>
-<div class="entry-field"><label>挤压动量 柱状颜色</label><select id="e_sqz_color" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="lime">🟢 亮绿（上涨加速）</option><option value="green">🌲 深绿（上涨减速）</option><option value="maroon">🟤 深红（下跌减速）</option><option value="red">🔴 鲜红（下跌加速）</option></select></div>
-<div class="entry-field"><label>挤压动量 中轴点颜色</label><select id="e_sqz_dot" onchange="this.classList.add('sel')"><option value="">请选择</option><option value="black">⚫ 黑色（蓄力）</option><option value="gray">⬜ 灰色（释放）</option><option value="blue">🔵 蓝色（无挤压）</option></select></div>
-<div style="grid-column:1/-1;margin-top:6px;padding:10px 12px;background:#faf5ff;border:.5px solid #e9d5ff;border-radius:10px">
-<div style="font-size:10px;font-weight:700;color:#7c3aed;margin-bottom:8px;letter-spacing:.3px">⚡ 底部转变信号（本K线刚发生转变时勾选）</div>
-<div style="display:flex;flex-direction:column;gap:7px">
-<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11.5px;color:#374151">
-<input type="checkbox" id="e_andean_just_cross" style="width:15px;height:15px;accent-color:#7c3aed;flex-shrink:0">
-<span>🌱 Andean 绿线(bull)本K线刚由 0 变为 &gt;0 &nbsp;<b style="color:#7c3aed">+2分</b></span></label>
-<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11.5px;color:#374151">
-<input type="checkbox" id="e_macd_just_green" style="width:15px;height:15px;accent-color:#7c3aed;flex-shrink:0">
-<span>🟢 MACD 本K线刚由红色变为深绿/亮绿 &nbsp;<b style="color:#7c3aed">+1分</b></span></label>
-<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11.5px;color:#374151">
-<input type="checkbox" id="e_sqz_just_maroon" style="width:15px;height:15px;accent-color:#7c3aed;flex-shrink:0">
-<span>🟤 Squeeze 本K线刚由鲜红变为栗色 &nbsp;<b style="color:#7c3aed">+1分</b>&nbsp;<span style="font-size:10px;color:#9ca3af">三项全选→保底8分</span></span></label>
-<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11.5px;color:#374151;margin-top:2px;padding-top:7px;border-top:.5px dashed #e9d5ff">
-<input type="checkbox" id="e_bear_shrink" style="width:15px;height:15px;accent-color:#059669;flex-shrink:0">
-<span>📉 Andean 红线(bear)数值较上一根 K线缩小（跌透企稳判定）</span></label>
-</div></div>
-<div style="grid-column:1/-1;margin-top:6px;padding:10px 12px;background:#fef2f2;border:.5px solid #fecaca;border-radius:10px">
-<div style="font-size:10px;font-weight:700;color:#dc2626;margin-bottom:8px;letter-spacing:.3px">🔻 顶部转变信号（本K线刚发生转变时勾选）</div>
-<div style="display:flex;flex-direction:column;gap:7px">
-<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11.5px;color:#374151">
-<input type="checkbox" id="e_andean_bear_cross" style="width:15px;height:15px;accent-color:#dc2626;flex-shrink:0">
-<span>🔴 Andean 红线(bear)本K线刚由 0 变为 &gt;0 &nbsp;<b style="color:#dc2626">-2分</b></span></label>
-<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11.5px;color:#374151">
-<input type="checkbox" id="e_macd_just_weak" style="width:15px;height:15px;accent-color:#dc2626;flex-shrink:0">
-<span>🟠 MACD 本K线刚由深绿/亮绿变为橙色/红色 &nbsp;<b style="color:#dc2626">-1分</b></span></label>
-<label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11.5px;color:#374151">
-<input type="checkbox" id="e_sqz_just_green" style="width:15px;height:15px;accent-color:#dc2626;flex-shrink:0">
-<span>🌲 Squeeze 本K线刚由亮绿变为深绿 &nbsp;<b style="color:#dc2626">-1分</b>&nbsp;<span style="font-size:10px;color:#9ca3af">三项全选→上限2分</span></span></label>
-</div></div>
+<div style="grid-column:1/-1;margin-top:4px;padding:9px 12px;background:#eff6ff;border:.5px solid #bfdbfe;border-radius:10px">
+<div style="font-size:10.5px;font-weight:700;color:#1e40af;margin-bottom:5px;letter-spacing:.3px">📐 三指标综合得分（来自 TradingView Pine 指标）</div>
+<div style="font-size:10px;color:#4b5563;margin-bottom:8px;line-height:1.5">运行「三指标V7」后，将面板中<b>综合得分</b>填入（已含状态分、转变加减分、共振与过热衰减）。</div>
+<div style="display:flex;align-items:center;gap:10px">
+<div style="font-size:10px;color:#6b7280;white-space:nowrap">三指标总分 (0-10)</div>
+<input type="number" id="e_tech3" min="0" max="10" step="1" placeholder="0~10" style="width:90px;padding:7px 10px;border:1px solid #bfdbfe;border-radius:8px;font-family:monospace;font-size:16px;font-weight:700;color:#2563eb;background:#fff;outline:none">
+</div>
 </div>
 <div class="btn-row">
 <button class="btn-fill" onclick="autoFill()">⚡ 自动填入今日数据</button>
@@ -312,7 +282,6 @@ g('header-date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'
 renderScoreDecomp();
 cloudLoad().then(function(r){ window._etfHistory=Array.isArray(r)?r:[]; renderHistory(r); });
 })();
-function togglePrev(){g('prev-wrap').style.display=gv('e_macd_color')==='none'?'block':'none';}
 function updateERP(){
 var fpe=parseFloat(gv('e_forward_pe')),us=parseFloat(gv('e_us10y'));
 if(!isNaN(fpe)&&fpe>0&&!isNaN(us)){g('e_erp').value=((1/fpe*100)-us).toFixed(3);}
@@ -338,7 +307,7 @@ html+='<div style="font-size:10px;font-weight:700;color:var(--blue);margin:6px 0
 html+=sr('pe','PE百分位·全历史',20);html+=sr('fpe','Forward PE',10);html+=sr('us10y','US10Y美债',12);html+=sr('erp','ERP风险溢价',10);html+=sr('premium','溢价/折价率',8);
 html+='<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;padding:5px 0;border-top:.5px solid #e5e7eb;margin-top:4px"><span style="color:#6b7280">估值面小计</span><span id="subtotal-val" style="color:#dc2626;font-family:monospace">-- / 60</span></div>';
 html+='<div style="font-size:10px;font-weight:700;color:var(--blue);margin:10px 0 4px;letter-spacing:.5px">▸ 技术面维度</div>';
-html+=sr('ma','价格与均线',8);html+=sr('fib','斐波那契',7);html+=sr('macd','脉冲MACD',4);html+=sr('andean','动能强弱',3);html+=sr('sqz','挤压动量',3);html+=sr('vix','VIX恐慌指数',10);html+=sr('nq','NQ期货升贴水',5);
+html+=sr('ma','价格与均线',8);html+=sr('fib','斐波那契',7);html+=sr('tech3','三指标综合(Pine)',10);html+=sr('vix','VIX恐慌指数',10);html+=sr('nq','NQ期货升贴水',5);
 html+='<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;padding:5px 0;border-top:.5px solid #e5e7eb;margin-top:4px"><span style="color:#6b7280">技术面小计</span><span id="subtotal-tech" style="color:#dc2626;font-family:monospace">-- / 40</span></div>';
 html+='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0"><span style="font-size:12px;font-weight:600;color:#6b7280">综合得分</span><span id="total-display" style="font-family:monospace;font-size:18px;font-weight:700;color:#d97706">-- / 100</span></div>';
 sc2.innerHTML=html;
@@ -349,10 +318,9 @@ function sp(id,s,max){var el=g('pts-'+id);if(!el)return;el.textContent=s+' / '+m
 function sc(s,max){return s/max>=.7?'#059669':s/max>=.4?'#d97706':'#dc2626';}
 function sd(id,desc){var el=g('desc-'+id);if(el)el.textContent=desc;}
 function clearAll(){
-['e_price','e_premium','e_pe_ttm','e_pe_pct','e_forward_pe','e_us10y','e_vix','e_sma60','e_sma120','e_sma250','e_fib_high','e_fib_low','e_bull','e_bear'].forEach(function(id){var el=g(id);if(el)el.value='';});
-['e_fib_zone','e_macd_color','e_macd_pos','e_macd_prev','e_andean_trend','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight'].forEach(function(id){var el=g(id);if(el){el.value='';el.classList.remove('sel');}});
-['e_andean_just_cross','e_macd_just_green','e_sqz_just_maroon','e_andean_bear_cross','e_macd_just_weak','e_sqz_just_green','e_bear_shrink'].forEach(function(id){var el=g(id);if(el)el.checked=false;});
-g('e_erp').value='';g('prev-wrap').style.display='none';
+['e_price','e_premium','e_pe_ttm','e_pe_pct','e_forward_pe','e_us10y','e_vix','e_sma60','e_sma120','e_sma250','e_fib_high','e_fib_low','e_tech3'].forEach(function(id){var el=g(id);if(el)el.value='';});
+['e_fib_zone','e_fib_dir','e_nq_contango','e_nq_overnight'].forEach(function(id){var el=g(id);if(el){el.value='';el.classList.remove('sel');}});
+g('e_erp').value='';
 var cr=g('calcResult');if(cr)cr.classList.remove('show');}
 // ─── 自动填入配置 ───────────────────────────────────────────
 // 修改此地址为你的 Worker 地址（部署后替换）
@@ -369,7 +337,7 @@ function autoFillHistory(){
   if(!date){ showMsg('⚠️ 请先选择一个历史日期'); return; }
   var today = new Date().toISOString().slice(0,10);
   if(date > today){ showMsg('⚠️ 不能选择未来日期'); return; }
-  var btn = document.querySelector('#backfill-date + button') || event.target;
+  var btn = document.querySelector('button[onclick="autoFillHistory()"]') || null;
   fetchAndFill(date, btn);
 }
 
@@ -585,7 +553,7 @@ function showManualReminder(){
     + '② Andean bull/bear 值 + 趋势状态 → TradingView 指标<br>'
     + '③ MACD 颜色 + 零轴位置 → TradingView 指标<br>'
     + '④ Squeeze 颜色 + 中轴点 → TradingView 指标<br>'
-    + '⑤ 底部/顶部转变信号（主观判断）<br>'
+    + '⑤ 转变信号/早顶/过热（自动对比上一条记录，无需勾选）<br>'
     + '<span style="color:#059669">✅ SMA60/120/250 / PE-TTM / Forward PE / PE百分位 / VIX / US10Y / 价格 / 溢价率 / NQ升贴水 → 全部已自动填入</span>';
   remind.style.display = 'block';
 }
@@ -594,10 +562,10 @@ function showManualReminder(){
 function autoFillDemo(msg){
   var data={e_price:'2.266',e_premium:'1.2',e_pe_ttm:'35.08',e_pe_pct:'74.96',e_forward_pe:'24.38',e_us10y:'4.455',e_vix:'16.82',
   e_sma60:'2.069',e_sma120:'1.932',e_sma250:'1.844',e_fib_high:'2.576',e_fib_low:'1.666',
-  e_bull:'0.2055',e_bear:'0.1787',e_nq_contango:'backwardation',e_nq_overnight:'small_drop',
-  e_fib_zone:'above_0382',e_macd_color:'lime',e_macd_pos:'above_far',
-  e_andean_trend:'bull_above',e_sqz_color:'red',e_sqz_dot:'black'};
-  Object.keys(data).forEach(function(id){var el=g(id);if(el){el.value=data[id];if(['e_fib_zone','e_macd_color','e_macd_pos','e_andean_trend','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight'].indexOf(id)>=0)el.classList.add('sel');}});
+  e_tech3:'7',
+  e_nq_contango:'backwardation',e_nq_overnight:'small_drop',
+  e_fib_zone:'above_0382'};
+  Object.keys(data).forEach(function(id){var el=g(id);if(el){el.value=data[id];if(['e_fib_zone','e_nq_contango','e_nq_overnight'].indexOf(id)>=0)el.classList.add('sel');}});
   updateERP();
   showMsg(msg||'✅ 已填入示例数据，请修改为今日实际数据后计算评分');
 }
@@ -608,10 +576,7 @@ var fpe=parseFloat(gv('e_forward_pe')),us10y=parseFloat(gv('e_us10y'));
 var vix=parseFloat(gv('e_vix'));
 var sma60=parseFloat(gv('e_sma60')),sma120=parseFloat(gv('e_sma120')),sma250=parseFloat(gv('e_sma250'));
 var fibHigh=parseFloat(gv('e_fib_high')),fibLow=parseFloat(gv('e_fib_low'));
-var bull=parseFloat(gv('e_bull')),bear=parseFloat(gv('e_bear'));
-var macdC=gv('e_macd_color'),macdPos=gv('e_macd_pos'),macdPrev=gv('e_macd_prev');
-var fibZone=gv('e_fib_zone'),andTrend=gv('e_andean_trend');
-var sqzC=gv('e_sqz_color'),sqzDot=gv('e_sqz_dot');
+var fibZone=gv('e_fib_zone');
 var nqCont=gv('e_nq_contango'),nqNight=gv('e_nq_overnight');
 var erp=(!isNaN(fpe)&&fpe>0&&!isNaN(us10y))?(1/fpe*100-us10y):NaN;
 if(!isNaN(fpe)&&!isNaN(us10y))g('e_erp').value=erp.toFixed(3);
@@ -620,17 +585,23 @@ var total=0,valTotal=0,techTotal=0;
 var peS=isNaN(pePct)?0:(pePct<=20?20:pePct<=35?16:pePct<=50?12:pePct<=65?7:pePct<=80?3:0);
 sb('pe',peS,20);sp('pe',peS,20);sd('pe',isNaN(pePct)?'未填入':pePct<=20?'极低分位 低估':pePct<=40?'低位':pePct<=60?'中性':pePct<=80?'偏高':'历史高位');valTotal+=peS;
 var fpeBase=isNaN(fpe)?0:(fpe<=22?10:fpe<=25?8:fpe<=28?6:fpe<=32?4:fpe<=36?2:0);
-var fpeAdj=0;if(!isNaN(peTtm)&&!isNaN(fpe)&&fpe>0){var diff=(peTtm-fpe)/fpe*100;if(fpe>peTtm)fpeAdj=2;else if(diff<10)fpeAdj=1;else if(diff>35)fpeAdj=-2;}
+var fpeAdj=0;if(!isNaN(peTtm)&&!isNaN(fpe)&&fpe>0){var diff=(peTtm-fpe)/fpe*100;
+// diff>0 = TTM>Fwd = 盈利增长预期; diff<0 = TTM<Fwd = EPS预计下降
+if(fpe>peTtm){fpeAdj=-1;} // Forward PE > TTM PE = 未来EPS预计下降 = 轻微看空
+else if(diff<10){fpeAdj=1;} // 略高于Forward, 适度成长预期
+else if(diff>35){fpeAdj=-2;} // TTM远高于Forward = 当前PE虚高（高基数效应）= 减分
+else{fpeAdj=1;} // 合理成长溢价
+}
 var fpeS=Math.max(0,Math.min(10,fpeBase+fpeAdj));
 sb('fpe',fpeS,10);sp('fpe',fpeS,10);sd('fpe',isNaN(fpe)?'未填入':fpe<=22?'低估值':fpe<=25?'合理':fpe<=28?'偏高':fpe<=32?'较贵':'泡沫区');valTotal+=fpeS;
 var bondS=isNaN(us10y)?0:(us10y<=3.5?12:us10y<=4.0?9:us10y<=4.5?6:us10y<=5.0?3:0);
 sb('us10y',bondS,12);sp('us10y',bondS,12);sd('us10y',isNaN(us10y)?'未填入':us10y<=3.5?'低利率 友好':us10y<=4.0?'适中':us10y<=4.5?'偏高承压':'高利率压估值');valTotal+=bondS;
 var erpS=isNaN(erp)?0:(erp>=3?10:erp>=2?8:erp>=1?6:erp>=0?4:erp>=-1?2:0);
 sb('erp',erpS,10);sp('erp',erpS,10);sd('erp',isNaN(erp)?'未填入':erp>=2?'高风险溢价':erp>=1?'偏高看多':erp>=0?'正值中性':'负值高估');valTotal+=erpS;
-var premS=isNaN(premium)?4:(Math.abs(premium)<=2?8:premium<=5?5:premium<=10?2:0);
+var premS=isNaN(premium)?0:(Math.abs(premium)<=2?8:premium<=5?5:premium<=10?2:0);
 sb('premium',premS,8);sp('premium',premS,8);sd('premium',isNaN(premium)?'未填入':Math.abs(premium)<=0.5?'贴近净值':premium>2?'溢价偏高':premium<-2?'折价明显':'正常范围');valTotal+=premS;
 g('subtotal-val').textContent=valTotal+' / 60';g('subtotal-val').style.color=sc(valTotal,60);
-var maS=4,maDesc='均线数据不足';
+var maS=0,maDesc='均线数据不足';
 if(!isNaN(price)&&!isNaN(sma250)){var dev=((price-sma250)/sma250*100);
 if(price>sma250&&dev>10){maS=1;maDesc='高于SMA250 +'+dev.toFixed(1)+'% 偏贵';}
 else if(price>sma250){maS=2;maDesc='高于SMA250 +'+dev.toFixed(1)+'%';}
@@ -644,85 +615,16 @@ var fibDownMap={above_1382:7,b1_1382:6,b0786_1:5,above_0786:4,golden:3,near_05:2
 var fibUpMap={above_0382:7,near_05:6,golden:4,above_0786:2,b0786_1:1,b1_1382:1,above_1382:0};
 var fibS=fibZone?(fibDir==='up'?fibUpMap[fibZone]||0:fibDownMap[fibZone]||0):0;
 sb('fib',fibS,7);sp('fib',fibS,7);sd('fib',(fibDir==='up'?'阻力:':'支撑:')+(fibZone==='above_1382'?'1.382+极值':fibZone==='b1_1382'?'1~1.382':fibZone==='b0786_1'?'0.786~1':fibZone==='above_0786'?'0.786+':fibZone==='golden'?'黄金区':fibZone==='near_05'?'0.5区':'0.382以上'));techTotal+=fibS;
-// ====== 三指标联动评分（总18分）======
-// ====== 三指标新评分体系（总10分：状态6分 + 转变4分）======
-// 读取转变加分勾选框
-var andeanJustCross=!!(g('e_andean_just_cross')&&g('e_andean_just_cross').checked);
-var macdJustGreen=!!(g('e_macd_just_green')&&g('e_macd_just_green').checked);
-var sqzJustMaroon=!!(g('e_sqz_just_maroon')&&g('e_sqz_just_maroon').checked);
-// 当前状态判断
-var macdLime=(macdC==='lime');
-var macdBull=(macdC==='lime'||macdC==='green');
-var macdWeak=(macdC==='orange'||macdC==='red');
-var andBullPos=(!isNaN(bull)&&bull>0);
-var andBearZero=(isNaN(bear)||bear<=0);
-var sqzLime=(sqzC==='lime');
-var sqzGreen=(sqzC==='green');
-var sqzMaroon=(sqzC==='maroon');
-// ── 状态分（双向 -2~6分）──
-var bearShrink=!!(g('e_bear_shrink')&&g('e_bear_shrink').checked);
-var macdWeakC=(macdC==='orange'||macdC==='red');
-var sqzRed=(sqzC==='red');
-var bearGtBull=(!isNaN(bear)&&!isNaN(bull)&&bear>bull);
-var stateScore=0,stateDesc='';
-// 多头/底部方向（正分 0~6）
-if(macdLime&&andBullPos&&andBearZero&&sqzLime){
-  stateScore=6;stateDesc='亮绿+多无空+Lime→6';}
-else if(macdLime&&andBullPos&&sqzGreen){
-  stateScore=4;stateDesc='Lime+多+Green→4';}
-else if(macdBull&&andBullPos&&(sqzMaroon||sqzGreen)){
-  stateScore=3;stateDesc='Green+多+Maroon/Green→3';}
-// 跌透企稳（正分 2）：弱势MACD但下跌减速+空头在收缩
-else if(macdWeakC&&sqzMaroon&&bearShrink){
-  stateScore=2;stateDesc='跌透企稳 下跌减速+空头收缩→2';}
-else if(macdBull&&!andBullPos){
-  stateScore=1;stateDesc='MACD多但bull=0→1';}
-// 空头/顶部方向（负分）
-else if(macdC==='red'&&bearGtBull&&sqzRed){
-  stateScore=-2;stateDesc='顶部确认/下跌加速→-2';}
-else if(macdWeakC&&bearGtBull&&sqzGreen){
-  stateScore=-1;stateDesc='刚见顶 转弱减速→-1';}
-else{stateScore=0;stateDesc='震荡中性→0';}
-// 读取顶部转变减分勾选框
-var andeanBearCross=!!(g('e_andean_bear_cross')&&g('e_andean_bear_cross').checked);
-var macdJustWeak=!!(g('e_macd_just_weak')&&g('e_macd_just_weak').checked);
-var sqzJustGreen=!!(g('e_sqz_just_green')&&g('e_sqz_just_green').checked);
-// ── 底部转变加分（0~4分）──
-var transBonus=0,transParts=[];
-if(andeanJustCross){transBonus+=2;transParts.push('Andean绿0→+2');}
-if(macdJustGreen){transBonus+=1;transParts.push('MACD红→绿+1');}
-if(sqzJustMaroon){transBonus+=1;transParts.push('Squeeze红→栗+1');}
-// ── 顶部转变减分（0~-4分）──
-var topPenalty=0,topParts=[],topCount=0;
-if(andeanBearCross){topPenalty-=2;topParts.push('Andean红0→-2');topCount++;}
-if(macdJustWeak){topPenalty-=1;topParts.push('MACD绿→橙/红-1');topCount++;}
-if(sqzJustGreen){topPenalty-=1;topParts.push('Squeeze亮绿→深绿-1');topCount++;}
-// 底部三重共振保底8分
-var bottomTriple=andeanJustCross&&macdJustGreen&&sqzJustMaroon;
-if(bottomTriple&&(stateScore+transBonus)<8){
-  transBonus=8-stateScore;transParts=['🔥底部三重共振，保底8分'];}
-// 顶部三重共振上限2分
-var topTriple=andeanBearCross&&macdJustWeak&&sqzJustGreen;
-var comboTotal=stateScore+transBonus+topPenalty;
-if(topTriple){comboTotal=Math.min(comboTotal,2);topParts=['🔻顶部三重共振，上限2分'];}
-comboTotal=Math.max(0,Math.min(10,comboTotal));
-var allParts=transParts.concat(topParts);
-var comboDesc=stateDesc+(allParts.length?' · '+allParts.join(' '):'');
-// 分配到三个指标（保持进度条各自显示）
-var macdS=Math.min(4,Math.round(comboTotal*0.4));
-var andS=Math.min(3,Math.round(comboTotal*0.3));
-var sqzS=Math.min(3,Math.max(0,comboTotal-macdS-andS));
-var macdDesc=comboDesc;
-var andDesc=andeanJustCross?'绿线0→>0 +2':(andBullPos?(andBearZero?'bull>0 bear=0':'bull>0'):'bull=0');
-var sqzDesc=sqzJustMaroon?'Red→栗色 +1':(sqzLime?'Lime':(sqzGreen?'Green':(sqzMaroon?'Maroon':'Red')));
-sb('macd',macdS,4);sp('macd',macdS,4);sd('macd',macdDesc);techTotal+=macdS;
-sb('andean',andS,3);sp('andean',andS,3);sd('andean',andDesc);techTotal+=andS;
-sb('sqz',sqzS,3);sp('sqz',sqzS,3);sd('sqz',sqzDesc);techTotal+=sqzS;
+// ====== 三指标综合得分（Pine指标总分直接录入）======
+var tech3=Math.min(10,Math.max(0,parseInt(gv('e_tech3'))||0));
+sb('tech3',tech3,10);sp('tech3',tech3,10);sd('tech3',tech3>=8?'强共振':tech3>=6?'偏多':tech3>=4?'中性':tech3>=2?'偏空':'弱势');techTotal+=tech3;
 var vixS=isNaN(vix)?0:(vix>40?10:vix>=35?9:vix>=30?8:vix>=27?7:vix>=25?6:vix>=22?5:vix>=20?4:vix>=18?3:vix>=15?2:vix>=12?1:0);
 sb('vix',vixS,10);sp('vix',vixS,10);sd('vix',isNaN(vix)?'未填入':vix>40?'极度恐慌★':vix>=30?'高恐慌':vix>=20?'中性偏谨慎':'低恐慌 乐观');techTotal+=vixS;
 var contMap={backwardation:2,mild_back:1.5,normal_contango:1,over_contango:0};
 var nightMap={crash:1,small_drop:0.5,big_rally:0};
-var nqS=nqCont?Math.min(5,(contMap[nqCont]||1)+(nightMap[nqNight]||0.5)):0;
+var nqContScore=nqCont?(contMap[nqCont]||1):null;
+var nqNightScore=nqNight!=null&&nqNight!==''?(nightMap[nqNight]??0.5):0.5;
+var nqS=nqContScore!=null?Math.min(5,nqContScore+nqNightScore):0;
 sb('nq',nqS,5);sp('nq',nqS,5);sd('nq',nqCont==='backwardation'?'期货贴水看多':nqCont==='mild_back'?'轻微贴水':nqNight==='crash'?'夜盘大跌警示':'正常升水');techTotal+=nqS;
 g('subtotal-tech').textContent=techTotal+' / 40';g('subtotal-tech').style.color=sc(techTotal,40);
 total=valTotal+techTotal;
@@ -793,7 +695,7 @@ if(!isNaN(premium)){
   var pel=g('kpi-premium');
   pel.textContent=(premium>0?'+':'')+premium.toFixed(2)+'%';
   pel.style.cssText=(Math.abs(premium)<=1?'color:#059669':premium>3?'color:#dc2626':'color:#d97706')+';font-family:monospace;font-size:22px;font-weight:700';
-  g('kpi-premium-sub').textContent=premium>2?'⚠️溢价偏高':Math.abs(premium)<=1?'贴近净值':'折价';
+  g('kpi-premium-sub').textContent=premium>3?'⚠️溢价偏高，成本虚增':Math.abs(premium)<=1?'贴近净值，正常':premium<-2?'✅折价买入，低于净值':'正常范围';
 }
 if(!isNaN(us10y)){
   var ue=g('kpi-us10y');
@@ -811,7 +713,7 @@ g('box-erp').textContent=isNaN(erp)?'--%':(erp>0?'+':'')+erp.toFixed(2)+'%';
 g('box-premium').textContent=isNaN(premium)?'--%':(premium>0?'+':'')+premium+'%';
 if(!isNaN(pePct)){g('pe-ptr').style.left=Math.min(95,Math.max(5,pePct))+'%';}
 g('pe-gauge-label').textContent='TTM PE '+(isNaN(peTtm)?'--':peTtm)+'倍 · 百分位'+(isNaN(pePct)?'--':pePct)+'%';
-if(!isNaN(erp)){g('erp-ptr').style.left=Math.min(95,Math.max(5,(erp+1)/4*100))+'%';}
+if(!isNaN(erp)){g('erp-ptr').style.left=Math.min(95,Math.max(5,(erp+2)/6*100))+'%';}
 g('erp-gauge-label').textContent='ERP '+(isNaN(erp)?'--':(erp>0?'+':'')+erp.toFixed(2))+'%';
 if(!isNaN(price)&&(!isNaN(sma60)||!isNaN(sma120)||!isNaN(sma250))){
 var rows=[{name:'SMA60',color:'#f59e0b',val:sma60},{name:'SMA120',color:'#3b82f6',val:sma120},{name:'SMA250',color:'#ef4444',val:sma250}].filter(function(r){return !isNaN(r.val);});
@@ -819,7 +721,7 @@ g('ma-tbody').innerHTML=rows.map(function(r){var dv=((price-r.val)/r.val*100).to
 return '<tr><td><span style="font-weight:600;color:'+r.color+'">'+r.name+'</span></td><td><span style="font-family:monospace">'+r.val+'</span></td>'
 +'<td style="color:'+(ab?'#059669':'#dc2626')+';font-family:monospace">'+(ab?'+':'')+dv+'%</td>'
 +'<td style="text-align:right"><span class="'+(ab?'tag-above':'tag-below')+'">'+(ab?'上方':'下方')+'</span></td></tr>';
-}).join('')+'<tr><td><span style="font-weight:600;color:#7c3aed">当前价</span></td><td style="font-family:monospace;font-weight:700;color:#dc2626">'+price+'</td><td>—</td><td style="font-size:10px;font-weight:600;color:'+sc(maS,10)+'">'+maDesc+'</td></tr>';}
+}).join('')+'<tr><td><span style="font-weight:600;color:#7c3aed">当前价</span></td><td style="font-family:monospace;font-weight:700;color:#dc2626">'+price+'</td><td>—</td><td style="font-size:10px;font-weight:600;color:'+sc(maS,8)+'">'+maDesc+'</td></tr>';}
 if(!isNaN(fibHigh)&&!isNaN(fibLow)&&!isNaN(price)){
 var range=fibHigh-fibLow;
 var lvs=[{r:0,l:'0.000',bg:'#dc2626',cls:'bg-red',t:'高点'},{r:.236,l:'0.236',bg:'#f59e0b',cls:'bg-amber',t:'压力'},{r:.382,l:'0.382',bg:'#f59e0b',cls:'bg-amber',t:'压力'},{r:.500,l:'0.500',bg:'#6b7280',cls:'bg-gray',t:'中轴'},{r:.618,l:'0.618',bg:'#059669',cls:'bg-green',t:'黄金位'},{r:.786,l:'0.786',bg:'#34d399',cls:'bg-green',t:'强支撑'},{r:1.000,l:'1.000',bg:'#2563eb',cls:'bg-blue',t:'前低'},{r:1.382,l:'1.382',bg:'#dc2626',cls:'bg-red',t:'极限位'}];
@@ -831,23 +733,23 @@ if(!ins&&parseFloat(px)<=price){
 html+='<div class="fib-row" style="margin:4px 0"><div class="fib-label" style="color:#7c3aed;font-size:11px">▶ 当前</div><div class="fib-bar-wrap"><div class="fib-bar-fill" style="width:'+(bp+5)+'%;background:#7c3aed"></div></div><div class="fib-price" style="color:#7c3aed">'+price+'</div><span class="fib-badge bg-purple">在此</span></div>';
 ins=true;}
 html+='<div class="fib-row"><div class="fib-label">'+lv.l+'</div><div class="fib-bar-wrap"><div class="fib-bar-fill" style="width:'+bp+'%;background:'+lv.bg+'"></div></div><div class="fib-price" style="color:'+lv.bg+'">'+px+'</div><span class="fib-badge '+lv.cls+'">'+lv.t+'</span></div>';});
+// 价格高于高点时，在顶部插入当前价
+if(!ins){html='<div class="fib-row" style="margin:4px 0"><div class="fib-label" style="color:#7c3aed;font-size:11px">▶ 当前</div><div class="fib-bar-wrap"><div class="fib-bar-fill" style="width:100%;background:#7c3aed"></div></div><div class="fib-price" style="color:#7c3aed">'+price+'</div><span class="fib-badge bg-purple">高于高点</span></div>'+html;}
 g('fib-rows').innerHTML=html;}
 g('indicator-rows').innerHTML=
-'<div class="ind-row"><div class="ind-dot '+(macdS===0?'red':macdS>=5?'green':'amber')+'"></div><div class="ind-content"><h4>脉冲MACD</h4><p>'+macdDesc+'</p></div></div>'
-+'<div class="ind-row"><div class="ind-dot '+(andS===0?'red':andS>=3?'green':'amber')+'"></div><div class="ind-content"><h4>动能强弱 Andean</h4><p>'+andDesc+'</p></div></div>'
-+'<div class="ind-row"><div class="ind-dot '+(sqzS===0?'red':sqzS>=4?'green':'amber')+'"></div><div class="ind-content"><h4>挤压动量</h4><p>'+sqzDesc+'</p></div></div>';
-var bull=[],bear=[];
-if(peS>=12)bull.push('PE百分位低位，纳指估值有吸引力');if(peS===0)bear.push('PE泡沫警戒区');
-if(fpeS>=6)bull.push('Forward PE合理');if(fpeS<=2)bear.push('Forward PE偏高');
-if(bondS>=9)bull.push('US10Y低位，利好科技股');if(bondS<=3)bear.push('US10Y偏高，估值承压');
-if(!isNaN(erp)&&erp>=1)bull.push('ERP正值，股票优于债券');if(!isNaN(erp)&&erp<0)bear.push('ERP负值，债券收益超过股票');
-if(!isNaN(premium)&&Math.abs(premium)<=2)bull.push('溢价率正常，无额外买入成本');if(!isNaN(premium)&&premium>5)bear.push('⚠️溢价率偏高，不建议买入');
-if(maS>=8)bull.push('价格跌破SMA250回踩');if(maS<=2)bear.push('价格高于SMA250偏贵');
-if(fibS>=5)bull.push('Fibonacci深度回调区');
-if(!isNaN(vix)&&vix>30)bull.push('VIX恐慌区，历史中期底部');if(!isNaN(vix)&&vix<20)bear.push('VIX低位，市场过度乐观');
-if(macdS===0)bear.push('MACD红色极弱');if(andS===0)bear.push('Andean绿线消失');if(sqzS===0)bear.push('挤压动量下跌加速');
-var bh=bull.length?bull.map(function(t){return '<div class="analyst-item"><div class="analyst-dot green"></div><p>'+t+'</p></div>';}).join(''):'<div class="analyst-item"><div class="analyst-dot gray"></div><p>暂无明显利多信号</p></div>';
-var beh=bear.length?bear.map(function(t){return '<div class="analyst-item"><div class="analyst-dot red"></div><p>'+t+'</p></div>';}).join(''):'<div class="analyst-item"><div class="analyst-dot gray"></div><p>暂无明显利空信号</p></div>';
+'<div class="ind-row"><div class="ind-dot '+(tech3<=2?'red':tech3>=7?'green':'amber')+'"></div><div class="ind-content"><h4>三指标综合 (Pine)</h4><p>'+tech3+'/10 · '+(tech3>=8?'强共振':tech3>=6?'偏多':tech3>=4?'中性':tech3>=2?'偏空':'弱势')+'</p></div></div>';
+var bullPts=[],bearPts=[];
+if(peS>=12)bullPts.push('PE百分位低位，纳指估值有吸引力');if(peS===0)bearPts.push('PE泡沫警戒区');
+if(fpeS>=6)bullPts.push('Forward PE合理');if(fpeS<=2)bearPts.push('Forward PE偏高');
+if(bondS>=9)bullPts.push('US10Y低位，利好科技股');if(bondS<=3)bearPts.push('US10Y偏高，估值承压');
+if(!isNaN(erp)&&erp>=1)bullPts.push('ERP正值，股票优于债券');if(!isNaN(erp)&&erp<0)bearPts.push('ERP负值，债券收益超过股票');
+if(!isNaN(premium)&&Math.abs(premium)<=2)bullPts.push('溢价率正常，无额外买入成本');if(!isNaN(premium)&&premium>5)bearPts.push('⚠️溢价率偏高，不建议买入');
+if(maS>=8)bullPts.push('价格跌破SMA250回踩');if(maS<=2)bearPts.push('价格高于SMA250偏贵');
+if(fibS>=5)bullPts.push('Fibonacci深度回调区');
+if(!isNaN(vix)&&vix>30)bullPts.push('VIX恐慌区，历史中期底部');if(!isNaN(vix)&&vix<20)bearPts.push('VIX低位，市场过度乐观');
+if(tech3<=2)bearPts.push('三指标偏弱（'+tech3+'/10）');if(tech3>=8)bullPts.push('三指标强共振（'+tech3+'/10）');
+var bh=bullPts.length?bullPts.map(function(t){return '<div class="analyst-item"><div class="analyst-dot green"></div><p>'+t+'</p></div>';}).join(''):'<div class="analyst-item"><div class="analyst-dot gray"></div><p>暂无明显利多信号</p></div>';
+var beh=bearPts.length?bearPts.map(function(t){return '<div class="analyst-item"><div class="analyst-dot red"></div><p>'+t+'</p></div>';}).join(''):'<div class="analyst-item"><div class="analyst-dot gray"></div><p>暂无明显利空因素</p></div>';
 var concl=total>=70?'估值与技术共振，可积极布局':total>=60?'估值支撑，技术待确认，轻仓试探':total>=45?'中性观望，持仓不动':'整体偏弱，建议回避等待';
 g('summary-card').innerHTML='<div class="card-title">⑦ 综合研判</div>'
 +'<div class="analyst-block" style="background:#f0fdf4;border-color:#bbf7d0"><h4 style="color:#065f46">利多因素</h4>'+bh+'</div>'
@@ -866,8 +768,8 @@ var te=g('etf-title');var title=te?te.textContent.trim():' · ';
 var cm=title.match(/\d{6}/);var code=cm?cm[0]:'';
 saveRecord({date:dateVal,code:code,title:title,total:total,valTotal:valTotal,techTotal:techTotal,level:level,
 price:isNaN(price)?null:price,us10y:isNaN(us10y)?null:us10y,erp:isNaN(erp)?null:parseFloat(erp.toFixed(3)),premium:isNaN(premium)?null:premium,
-_form:(function(){var f={};['e_price','e_premium','e_pe_ttm','e_pe_pct','e_forward_pe','e_us10y','e_vix','e_sma60','e_sma120','e_sma250','e_fib_high','e_fib_low','e_fib_zone','e_bull','e_bear','e_andean_trend','e_macd_color','e_macd_pos','e_macd_prev','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight'].forEach(function(id){f[id]=gv(id);});
-['e_andean_just_cross','e_macd_just_green','e_sqz_just_maroon','e_andean_bear_cross','e_macd_just_weak','e_sqz_just_green','e_bear_shrink'].forEach(function(id){var el=g(id);f[id]=el?el.checked:false;});return f;})()});
+_form:(function(){var f={};['e_price','e_premium','e_pe_ttm','e_pe_pct','e_forward_pe','e_us10y','e_vix','e_sma60','e_sma120','e_sma250','e_fib_high','e_fib_low','e_fib_zone','e_fib_dir','e_tech3','e_nq_contango','e_nq_overnight'].forEach(function(id){f[id]=gv(id);});
+return f;})()});
 showMsg('综合得分：<strong>'+total+'/100</strong>（估值'+valTotal+'+技术'+techTotal+'）');}
 function loadHistory(){return[];}// legacy stub
 function saveRecord(rec){
@@ -876,6 +778,7 @@ var key=rec.date+'_'+(rec.code||'');
 var idx=records.findIndex(function(r){return (r.date+'_'+(r.code||''))===key;});
 if(idx>=0)records[idx]=rec;else records.push(rec);
 records.sort(function(a,b){return a.date.localeCompare(b.date);});
+window._etfHistory=records; // 同步更新内存缓存，保证转变信号下次即可用
 cloudSave(records);
 renderHistory(records);});}
 function renderHistory(records,filterCode){
@@ -940,17 +843,20 @@ if(isSearch){
   // ── 默认模式：上方固定显示最新3条，超3条时下方展开滚动区 ──
   var visible=allForCode.slice(0,3);
   var otherCodes=Object.keys(groups).filter(function(c){return c!==showCode;});
-  var totalHidden=records.length-visible.length;
+  var totalHidden=allForCode.length-visible.length; // 同代码超过3条的隐藏数
+  var otherTotal=records.length-allForCode.length;  // 其他代码的记录总数
   var cardRows='';
   visible.forEach(function(item){cardRows+=makeRow(item);});
   var scrollSection='';
   // 默认模式不显示滚动区，只在主动检索时才展开
   var hiddenTip='';
-  if(totalHidden>0){
-    var otherStr=otherCodes.length>0?'，另有 '+otherCodes.join('、')+' 等其他ETF记录':'';
+  if(totalHidden>0||otherTotal>0){
+    var tip='';
+    if(totalHidden>0)tip+='<b style="color:#374151">'+showCode+'</b> 另有 <b>'+totalHidden+'</b> 条历史记录';
+    if(otherTotal>0)tip+=(totalHidden>0?'，':'')+'另有其他ETF（'+otherCodes.join('、')+'）<b>'+otherTotal+'</b> 条';
     hiddenTip='<div style="margin-top:8px;padding:7px 10px;background:#f3f4f6;border-radius:8px;display:flex;justify-content:space-between;align-items:center">'
-      +'<span style="font-size:11px;color:var(--muted)">另有 <b style="color:#374151">'+totalHidden+'</b> 条记录已存入云端'+otherStr+'</span>'
-      +'<span style="font-size:10px;color:#9ca3af">导出CSV查看全部</span></div>';
+      +'<span style="font-size:11px;color:var(--muted)">'+tip+'，已存入云端</span>'
+      +'<span style="font-size:10px;color:#9ca3af">输入代码检索 / 导出CSV查看全部</span></div>';
   }
   wrap.innerHTML='<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:460px">'+thead+'<tbody>'+cardRows+'</tbody></table></div>'
     +scrollSection+hiddenTip
@@ -967,11 +873,10 @@ cloudLoad().then(function(records){
 if(idx<0||idx>=records.length)return;
 var r=records[idx];if(!r._form){showMsg('⚠️ 旧版记录无法回放');return;}
 var f=r._form;Object.keys(f).forEach(function(id){var el=g(id);if(el)el.value=f[id]||'';});
-['e_fib_zone','e_macd_color','e_macd_pos','e_macd_prev','e_andean_trend','e_sqz_color','e_sqz_dot','e_nq_contango','e_nq_overnight'].forEach(function(id){var el=g(id);if(el&&f[id])el.classList.add('sel');});
-['e_andean_just_cross','e_macd_just_green','e_sqz_just_maroon','e_andean_bear_cross','e_macd_just_weak','e_sqz_just_green','e_bear_shrink'].forEach(function(id){var el=g(id);if(el)el.checked=!!f[id];});
+['e_fib_zone','e_fib_dir','e_nq_contango','e_nq_overnight'].forEach(function(id){var el=g(id);if(el&&f[id])el.classList.add('sel');});
 var hd=g('header-date');if(hd)hd.value=r.date;
 var te=g('etf-title');if(te&&r.title)te.textContent=r.title;
-updateERP();togglePrev();calcScore();
+updateERP();calcScore();
 var ec=document.querySelector('.card');if(ec)ec.scrollIntoView({behavior:'smooth',block:'start'});
 showMsg('🔄 已回放 <strong>'+r.date+'</strong>（'+(r.code||'')+'）评分 '+r.total+'/100');});} // end cloudLoad
 function deleteRecord(idx){
@@ -979,24 +884,26 @@ cloudLoad().then(function(records){
 if(idx<0||idx>=records.length)return;
 var r=records[idx];var m=document.createElement('div');
 m.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center';
-m.innerHTML='<div style="background:#fff;border-radius:12px;padding:20px;max-width:280px;width:90%;text-align:center">'
-+'<p style="font-size:14px;font-weight:600;margin-bottom:8px">删除此条记录？</p>'
-+'<p style="font-size:12px;color:var(--muted);margin-bottom:16px">'+r.date+' · '+(r.code||'')+' · '+r.total+'分</p>'
-+'<div style="display:flex;gap:8px"><button id="dc" style="flex:1;padding:9px;background:#f3f4f6;border:none;border-radius:8px;cursor:pointer">取消</button>'
-+'<button id="dd" style="flex:1;padding:9px;background:#dc2626;color:#fff;border:none;border-radius:8px;cursor:pointer">删除</button></div></div>';
+var btnC=document.createElement('button');btnC.textContent='取消';btnC.style.cssText='flex:1;padding:9px;background:#f3f4f6;border:none;border-radius:8px;cursor:pointer';
+var btnD=document.createElement('button');btnD.textContent='删除';btnD.style.cssText='flex:1;padding:9px;background:#dc2626;color:#fff;border:none;border-radius:8px;cursor:pointer';
+var inner=document.createElement('div');inner.style.cssText='background:#fff;border-radius:12px;padding:20px;max-width:280px;width:90%;text-align:center';
+inner.innerHTML='<p style="font-size:14px;font-weight:600;margin-bottom:8px">删除此条记录？</p><p style="font-size:12px;color:var(--muted);margin-bottom:16px">'+r.date+' · '+(r.code||'')+' · '+r.total+'分</p>';
+var btnRow=document.createElement('div');btnRow.style.cssText='display:flex;gap:8px';
+btnRow.appendChild(btnC);btnRow.appendChild(btnD);inner.appendChild(btnRow);m.appendChild(inner);
 document.body.appendChild(m);
-g('dc').onclick=function(){document.body.removeChild(m);};
-g('dd').onclick=function(){records.splice(idx,1);cloudSave(records);renderHistory(records);document.body.removeChild(m);};});}
+btnC.onclick=function(){document.body.removeChild(m);};
+btnD.onclick=function(){records.splice(idx,1);window._etfHistory=records;cloudSave(records);renderHistory(records);document.body.removeChild(m);};});}
 function clearHistory(){
 var m=document.createElement('div');m.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center';
-m.innerHTML='<div style="background:#fff;border-radius:12px;padding:20px;max-width:280px;width:90%;text-align:center">'
-+'<p style="font-size:14px;font-weight:600;margin-bottom:6px">清除所有记录？</p>'
-+'<p style="font-size:12px;color:var(--muted);margin-bottom:16px">此操作不可恢复</p>'
-+'<div style="display:flex;gap:8px"><button id="cc" style="flex:1;padding:9px;background:#f3f4f6;border:none;border-radius:8px;cursor:pointer">取消</button>'
-+'<button id="cd" style="flex:1;padding:9px;background:#dc2626;color:#fff;border:none;border-radius:8px;cursor:pointer">清除</button></div></div>';
+var btnC=document.createElement('button');btnC.textContent='取消';btnC.style.cssText='flex:1;padding:9px;background:#f3f4f6;border:none;border-radius:8px;cursor:pointer';
+var btnD=document.createElement('button');btnD.textContent='清除';btnD.style.cssText='flex:1;padding:9px;background:#dc2626;color:#fff;border:none;border-radius:8px;cursor:pointer';
+var inner=document.createElement('div');inner.style.cssText='background:#fff;border-radius:12px;padding:20px;max-width:280px;width:90%;text-align:center';
+inner.innerHTML='<p style="font-size:14px;font-weight:600;margin-bottom:6px">清除所有记录？</p><p style="font-size:12px;color:var(--muted);margin-bottom:16px">此操作不可恢复</p>';
+var btnRow=document.createElement('div');btnRow.style.cssText='display:flex;gap:8px';
+btnRow.appendChild(btnC);btnRow.appendChild(btnD);inner.appendChild(btnRow);m.appendChild(inner);
 document.body.appendChild(m);
-g('cc').onclick=function(){document.body.removeChild(m);};
-g('cd').onclick=function(){cloudSave([]);renderHistory([]);document.body.removeChild(m);};}
+btnC.onclick=function(){document.body.removeChild(m);};
+btnD.onclick=function(){window._etfHistory=[];cloudSave([]);renderHistory([]);document.body.removeChild(m);};}
 
 function showMonthly(){
   cloudLoad().then(function(records){
@@ -1010,7 +917,7 @@ function showMonthly(){
   var html='';
   Object.keys(months).sort().reverse().forEach(function(m){
     var recs=months[m];
-    var scores=recs.map(function(r){return r.total||0;});
+    var scores=recs.map(function(r){return typeof r.total==='number'?r.total:0;});
     var avg=(scores.reduce(function(a,b){return a+b;},0)/scores.length).toFixed(1);
     var avgNum=parseFloat(avg);
     var max=Math.max.apply(null,scores);
@@ -1070,7 +977,7 @@ function exportCSV(){
 cloudLoad().then(function(records){
 if(records.length===0){alert('暂无记录');return;}
 var header=['日期','代码','总分','估值','技术','信号','价格','US10Y%','ERP%'];
-var rows=records.map(function(r){return[r.date,r.code||'',r.total,r.valTotal,r.techTotal,r.level,r.price||'',r.us10y||'',r.erp||''].join(',');});
+var rows=records.map(function(r){return[r.date,r.code||'',r.total,r.valTotal,r.techTotal,r.level,r.price!=null?r.price:'',r.us10y!=null?r.us10y:'',r.erp!=null?r.erp:''].join(',');});
 var csv='\uFEFF'+header.join(',')+rows.map(function(r){return '\n'+r;}).join('');
 var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
 var url=URL.createObjectURL(blob);var a=document.createElement('a');
@@ -1138,7 +1045,7 @@ function exportArchiveCSV(){
   if(data.length === 0){ alert('请先点「加载归档」'); return; }
   var header = ['日期','价格','溢价率%','VIX','US10Y%','NDX收盘','NDX涨跌%','NQ升贴水%','PE-TTM','ForwardPE','PE分位%','SMA60','SMA120','SMA250'];
   var rows = data.map(function(r){
-    return [r.date, r.price||'', r.premium||'', r.vix||'', r.us10y||'', r.ndx_close||'', r.ndx_chg||'', r.nq_premium||'', r.pe_ttm||'', r.forward_pe||'', r.pe_pct||'', r.sma60||'', r.sma120||'', r.sma250||''].join(',');
+    return [r.date, r.price!=null?r.price:'', r.premium!=null?r.premium:'', r.vix!=null?r.vix:'', r.us10y!=null?r.us10y:'', r.ndx_close!=null?r.ndx_close:'', r.ndx_chg!=null?r.ndx_chg:'', r.nq_premium!=null?r.nq_premium:'', r.pe_ttm!=null?r.pe_ttm:'', r.forward_pe!=null?r.forward_pe:'', r.pe_pct!=null?r.pe_pct:'', r.sma60!=null?r.sma60:'', r.sma120!=null?r.sma120:'', r.sma250!=null?r.sma250:''].join(',');
   });
   var csv = '\uFEFF'+header.join(',')+'\n'+rows.join('\n');
   var blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
