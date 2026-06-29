@@ -63,9 +63,9 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 .analyst-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
 .analyst-dot.green{background:#059669}.analyst-dot.red{background:#dc2626}.analyst-dot.gray{background:var(--muted)}
 .analyst-item p{font-size:11px;color:#111827;line-height:1.5}
-.entry-field{display:flex;flex-direction:column;gap:4px;margin-bottom:8px}
-.entry-field label{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap}
-.entry-field input,.entry-field select{font-family:monospace;font-size:13px;padding:7px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#f9fafb;color:#111827;outline:none;width:100%}
+.entry-field{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;min-width:0}
+.entry-field label{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entry-field input,.entry-field select{font-family:monospace;font-size:13px;padding:7px 10px;border:1px solid #e5e7eb;border-radius:8px;background:#f9fafb;color:#111827;outline:none;width:100%;min-width:0;box-sizing:border-box}
 .entry-field input:focus,.entry-field select:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(124,58,237,.1);background:#fff}
 .entry-field select{color:var(--muted)}.entry-field select.sel{color:#111827}
 .entry-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%}
@@ -119,6 +119,7 @@ body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:#11
 <div style="display:flex;align-items:center;gap:10px">
 <div style="font-size:10px;color:#6b7280;white-space:nowrap">三指标总分 (0-10)</div>
 <input type="number" id="e_tech3" min="0" max="10" step="1" placeholder="0~10" style="width:90px;padding:7px 10px;border:1px solid #bfdbfe;border-radius:8px;font-family:monospace;font-size:16px;font-weight:700;color:#2563eb;background:#fff;outline:none">
+</div>
 </div>
 </div>
 <div class="btn-row">
